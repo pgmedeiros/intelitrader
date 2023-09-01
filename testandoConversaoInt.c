@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+#define BYTE_SIZE 8
+
+int* decimalToBinary(int decimal);
 
 int main( void ) {
 	
@@ -11,28 +14,29 @@ int main( void ) {
 	
 	printf("%i\n", c);
 	
-	intToBinary(c);
+	int * f = decimalToBinary(c);
+	
+	for (int x = 0; x < BYTE_SIZE; x ++) {
+		printf("%i",f[x]);
+	}
 	
 	return 0;
 }
 
-void intToBinary(int number) {
+int* decimalToBinary(int decimal) {
 	
-	char* colecaoDeChar = malloc(8 * sizeof(char));
-	int counter = 7;
+	int* binary = malloc(BYTE_SIZE * sizeof(int));
+	int counter = BYTE_SIZE - 1;
 	
-	while((number / 2) != 0) {
-		colecaoDeChar[counter] = number % 2;
-		number = number/2;
-		counter--;
+	do {
+		binary[counter--] = decimal % 2;
+		decimal = decimal / 2;
+	}
+	while(decimal != 0);
+	
+	for (int x = 0; x <= counter; x++) {
+		binary[x] = 0;
 	}
 	
-	colecaoDeChar[counter] = number % 2;
-
-	colecaoDeChar[0] = 0;
-	
-	int x;
-	for (x=0; x < 8; x++) {
-		printf("%i", colecaoDeChar[x]);
-	}
+	return binary;
 }
