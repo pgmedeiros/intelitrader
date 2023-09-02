@@ -6,7 +6,7 @@
 
 int* decimalToBinary(int decimal);
 
-int * putInBase64Blocks(int binary);
+int putInBase64Blocks(int binary);
 
 int main( void ) {
 		
@@ -16,13 +16,7 @@ int main( void ) {
 	
 	printf("%u\n", c);
 	
-	int * f = decimalToBinary(c);	
-	
-	int * texto = putInBase64Blocks(f);
-	
-	for (int x = 0; x < 23; x++) {
-		printf("%i ", texto[x]);
-	}
+	unsigned x = putInBase64Blocks('A');
 	
 	return 0;
 }
@@ -45,19 +39,49 @@ int* decimalToBinary(int decimal) {
 	return binary;
 }
 
-int* putInBase64Blocks(int binary) {
+int putInBase64Blocks(int number) {
 	
-	unsigned base64block = malloc(BASE64_BYTES_NUMBER);
-	base64block = 1 << BASE64_BLOCK_SIZE - 1;
+//	000000 000000 000000 000000
+//	
+//	00000000 00000000 00000000
+//	
+//	teste com exemplo letra a 
+//	
+//	 // origem 8 bits
+//	 
+//	01000001
+//	 
+//	// pra cá  
+//	010000 010000 = = 
+//	
+//	
+//	00000000 00000000 00000000
+//	
+//	00000000 00000000 01000001
+//	
+//	
+//	00000000 00000000 00000000
+//	
+//	// andou 16 bits
+//	
+//	01000001 00000000 00000000
 	
-	char texto[24];
 	
-	for (int i = 1; i <= BASE64_BLOCK_SIZE; i++) {
-		texto[i - 1] = (binary & base64block ? '1' : '0');
-		binary = binary << 1; 
-	}
+	unsigned base64block = malloc(BASE64_BYTES_NUMBER);	
+	base64block = 0 << 23;
 	
-	return texto;
+	base64block = (number | base64block);
+	
+	base64block <<= 16;
+	
+	printf("%i ", base64block);
+		
+	
+	
+	
+	
+	return 0;
+	
 	
 }
 
