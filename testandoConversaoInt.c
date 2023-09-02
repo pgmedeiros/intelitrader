@@ -1,23 +1,27 @@
 #include <stdio.h>
 
 #define BYTE_SIZE 8
+#define BASE64_BLOCK_SIZE 24
+#define BASE64_BYTES_NUMBER 3
 
 int* decimalToBinary(int decimal);
 
+int * putInBase64Blocks(int binary);
+
 int main( void ) {
+		
+	unsigned c; 
 	
-	// então consigo pegar o inteiro do ascii
+	scanf("%u", &c);
 	
-	int c; 
+	printf("%u\n", c);
 	
-	scanf("%c", &c);
+	int * f = decimalToBinary(c);	
 	
-	printf("%i\n", c);
+	int * texto = putInBase64Blocks(f);
 	
-	int * f = decimalToBinary(c);
-	
-	for (int x = 0; x < BYTE_SIZE; x ++) {
-		printf("%i",f[x]);
+	for (int x = 0; x < 23; x++) {
+		printf("%i ", texto[x]);
 	}
 	
 	return 0;
@@ -40,3 +44,20 @@ int* decimalToBinary(int decimal) {
 	
 	return binary;
 }
+
+int* putInBase64Blocks(int binary) {
+	
+	unsigned base64block = malloc(BASE64_BYTES_NUMBER);
+	base64block = 1 << BASE64_BLOCK_SIZE - 1;
+	
+	char texto[24];
+	
+	for (int i = 1; i <= BASE64_BLOCK_SIZE; i++) {
+		texto[i - 1] = (binary & base64block ? '1' : '0');
+		binary = binary << 1; 
+	}
+	
+	return texto;
+	
+}
+
