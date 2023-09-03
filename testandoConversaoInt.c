@@ -20,24 +20,6 @@ int main( void ) {
 	return 0;
 }
 
-int* decimalToBinary(int decimal) {
-	
-	int* binary = malloc(BYTE_SIZE * sizeof(int));
-	int counter = BYTE_SIZE - 1;
-	
-	do {
-		binary[counter--] = decimal % 2;
-		decimal = decimal / 2;
-	}
-	while(decimal != 0);
-	
-	for (int x = 0; x <= counter; x++) {
-		binary[x] = 0;
-	}
-	
-	return binary;
-}
-
 int getFirstBlock(int base64block, int position) {
 	
 	unsigned long base64cell1 = 0 << 7;		
@@ -85,7 +67,6 @@ int putInBase64Blocks(int number) {
 	
 	base64block <<= 16;
 	
-	// baseblock 01000001 00000000 00000000		
 	int firstBlock = getFirstBlock(base64block, 1);
 	int secondBlock = getFirstBlock(base64block, 2);
 
