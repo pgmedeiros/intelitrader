@@ -10,13 +10,12 @@ int putInBase64Blocks(int binary);
 
 int main( void ) {
 		
-	unsigned c; 
+	int c; 
 	
-	scanf("%u", &c);
-	
-	printf("%u\n", c);
-	
-	unsigned x = putInBase64Blocks('A');
+	scanf("%i", &c);
+		
+	putInBase64Blocks('C');
+
 	
 	return 0;
 }
@@ -39,49 +38,59 @@ int* decimalToBinary(int decimal) {
 	return binary;
 }
 
+int getFirstBlock(int base64block, int position) {
+	
+	unsigned long base64cell1 = 0 << 7;		
+	unsigned base64block1 = 0 << 7;
+	
+	int bitsParaEsquerda;
+	
+	switch (position) {
+		
+		case 1:
+			bitsParaEsquerda = 18;
+			break;
+		case 2: 
+			bitsParaEsquerda = 12; 
+			break;
+		case 3: 
+			bitsParaEsquerda = 6;
+			break;
+		case 4:		
+			bitsParaEsquerda = 0;
+
+	}
+			
+	
+	unsigned mask = 63; 
+						
+	mask = mask << bitsParaEsquerda;
+
+	base64cell1 = (base64block & mask);
+	
+	base64cell1 >>= bitsParaEsquerda;
+		
+	printf("%i bloco 1\n", base64cell1);
+	return base64cell1;
+}
+
 int putInBase64Blocks(int number) {
-	
-//	000000 000000 000000 000000
-//	
-//	00000000 00000000 00000000
-//	
-//	teste com exemplo letra a 
-//	
-//	 // origem 8 bits
-//	 
-//	01000001
-//	 
-//	// pra cá  
-//	010000 010000 = = 
-//	
-//	
-//	00000000 00000000 00000000
-//	
-//	00000000 00000000 01000001
-//	
-//	
-//	00000000 00000000 00000000
-//	
-//	// andou 16 bits
-//	
-//	01000001 00000000 00000000
-	
-	
+		
 	unsigned base64block = malloc(BASE64_BYTES_NUMBER);	
 	base64block = 0 << 23;
 	
 	base64block = (number | base64block);
 	
+	printf("%i aqui \n",base64block );
+	
 	base64block <<= 16;
 	
-	printf("%i ", base64block);
-		
-	
-	
-	
-	
+	// baseblock 01000001 00000000 00000000		
+	int firstBlock = getFirstBlock(base64block, 1);
+	int secondBlock = getFirstBlock(base64block, 2);
+
+			
 	return 0;
-	
 	
 }
 
