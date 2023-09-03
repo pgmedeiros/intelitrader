@@ -8,19 +8,29 @@
 #define THIRD_BLOCK 2 
 #define FOURTH_BLOCK 3
 
-int* decimalToBinary(int decimal);
+int putInBase64Blocks(int number);
 
-int putInBase64Blocks(int binary);
+int arrayCharToBase64Complete(int position, int x, int y);
 
 int main( void ) {
 		
 	int c; 
 	
 	scanf("%i", &c);
-		
-	putInBase64Blocks('C');
-
 	
+	char v[3] = {'A', 'B', 'C'};
+	
+	unsigned mask = 0;
+	mask <<= 16;
+			
+	int retorno = arrayCharToBase64Complete(FIRST_BLOCK, mask, 65);
+	int retorno2 = arrayCharToBase64Complete(SECOND_BLOCK, retorno, 66);
+	int retorno3 = arrayCharToBase64Complete(THIRD_BLOCK, retorno2, 67);
+	
+	putInBase64Blocks(retorno3);
+
+
+	printf("retorno %i ", retorno);
 	return 0;
 }
 
@@ -55,24 +65,41 @@ int getBlockByPosition(int base64block, int position) {
 	
 	base64cell1 >>= bitsToMove;
 		
-	printf("%i bloco 1\n", base64cell1);
 	return base64cell1;
+}
+
+int arrayCharToBase64Complete(int position, int numberToPut, int number) {
+	
+	int bitsToMove;
+	
+	switch (position) {
+		
+		case FIRST_BLOCK:
+			bitsToMove = 16;
+			break;
+		case SECOND_BLOCK: 
+			bitsToMove = 8; 
+			break;
+		case THIRD_BLOCK: 
+			bitsToMove = 0;
+	}
+	
+	number <<= bitsToMove;
+	numberToPut = (number | numberToPut);
+	
+	return numberToPut;
+		
 }
 
 int putInBase64Blocks(int number) {
 		
 	unsigned base64block = malloc(BASE64_BYTES_NUMBER);	
-	base64block = 0 << 23;
 	
-	base64block = (number | base64block);
+	int firstBlock = getBlockByPosition(number, FIRST_BLOCK);
+	int secondBlock = getBlockByPosition(number, SECOND_BLOCK);
+	int thirdBlock = getBlockByPosition(number, THIRD_BLOCK);
+	int fourthBlock = getBlockByPosition(number, FOURTH_BLOCK);
 	
-	printf("%i aqui \n",base64block );
-	
-	base64block <<= 16;
-	
-	int firstBlock = getBlockByPosition(base64block, FIRST_BLOCK);
-	int secondBlock = getBlockByPosition(base64block, SECOND_BLOCK);
-
 			
 	return 0;
 	
