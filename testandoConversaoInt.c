@@ -26,7 +26,7 @@ int main( void ) {
 
 int getBlockByPosition(int base64block, int position) {
 	
-	unsigned long base64cell1 = 0 << 7;		
+	unsigned base64cell1 = 0 << 7;		
 	unsigned base64block1 = 0 << 7;
 	
 	int bitsToMove;
