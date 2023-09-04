@@ -29,18 +29,22 @@ int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 int main( void ) {
 		
 	int c; 
+	unsigned base64Binary;
+
+	int asciiCharArray[3] = {'M', 'a', 'n'};
+	int base64CharArray[4] = { base64Table[64] };
+	int asciiCharArraySize;
 	
 	scanf("%i", &c);
 	
-	int v[3] = {'M', 'a', 'n'};
-	int y[4] = { base64Table[64] };
+	asciiCharArraySize = 3;
 		
-	unsigned base64Binary = AsciiToBase64(v);
+	base64Binary = AsciiToBase64(asciiCharArray);
 	
-	createBase64Words(y, base64Binary, 3);
+	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
 	
 	for(int i = 0; i < 4; i++) {
-		putchar(y[i]);
+		putchar(base64CharArray[i]);
 	}
 	
 	return 0;
@@ -65,7 +69,7 @@ int AsciiToBase64(int array[]) {
 		
 }
 
-int getBase64WordFromBinary(int base64block, int position) {
+int getCharFromBase64Binary(int base64block, int position) {
 	
 	unsigned base64cell1 = 0 << 7;		
 	unsigned base64block1 = 0 << 7;
@@ -73,10 +77,12 @@ int getBase64WordFromBinary(int base64block, int position) {
 	int bitsToMove;
 	
 	defineBitsToMove(&bitsToMove, position, BASE64_WORD_SIZE);
-	
+
+// criando mascara	
 	unsigned mask = 63; 
 						
 	mask = mask << bitsToMove;
+// acaba aqui 
 
 	base64cell1 = (base64block & mask);
 	
@@ -104,10 +110,10 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-void createBase64Words(int array[], int number, int size) {
+void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Binary, int asciiCharArraySize) {
 			
-	for (int i = 0; i < size + 1; i++) {
-		array[i] = base64Table[getBase64WordFromBinary(number, i)];
+	for (int i = 0; i < asciiCharArraySize + 1; i++) {
+		base64CharArray[i] = base64Table[getCharFromBase64Binary(base64Binary, i)];
 	}
 	
 }
