@@ -55,18 +55,8 @@ int AsciiToBase64(int array[]) {
 		
 		int bitsToMove;
 	
-		switch (i) {
-			
-			case FIRST_BLOCK:
-				bitsToMove = 16;
-				break;
-			case SECOND_BLOCK: 
-				bitsToMove = 8; 
-				break;
-			case THIRD_BLOCK: 
-				bitsToMove = 0;
-		}
-	
+		defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
+
 		array[i] <<= bitsToMove;
 		numberToPut = (array[i] | numberToPut);
 	}
@@ -82,7 +72,7 @@ int getBase64WordFromBinary(int base64block, int position) {
 	
 	int bitsToMove;
 	
-	defineBitsToMove(&bitsToMove, position, BASE64_BLOCK_SIZE);
+	defineBitsToMove(&bitsToMove, position, BASE64_WORD_SIZE);
 	
 	unsigned mask = 63; 
 						
@@ -95,29 +85,21 @@ int getBase64WordFromBinary(int base64block, int position) {
 	return base64cell1;
 }
 
-void defineBitsToMove(int * bitsToMove, int position, int size) {
-	
-	int wordSize;
-	
-	if (size == BASE64_BLOCK_SIZE) {
-		wordSize = BASE64_WORD_SIZE;
-	} else {
-		wordSize = BYTE_SIZE;
-	}
+void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	
 	switch (position) {
 		
 		case FIRST_BLOCK:
-			*bitsToMove = size - (wordSize);
+			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize);
 			break;
 		case SECOND_BLOCK: 
-			*bitsToMove = size - (wordSize * 2); 
+			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize * 2); 
 			break;
 		case THIRD_BLOCK: 
-			*bitsToMove = size - (wordSize * 3);
+			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize * 3);
 			break;
 		case FOURTH_BLOCK:		
-			*bitsToMove = size - (wordSize * 4);
+			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize * 4);
 
 	}
 }
