@@ -26,6 +26,8 @@ int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 					  'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7',
 					  '8', '9', '+',  '/', '='};
 
+int const COMPLETE_BASE64 = 63;
+
 int main( void ) {
 		
 	int c; 
@@ -50,7 +52,7 @@ int main( void ) {
 	return 0;
 }
 
-int AsciiToBase64(int array[]) {
+int AsciiToBase64(int asciiCharArray[]) {
 	
 	unsigned numberToPut = 0;
 	numberToPut <<= 16;
@@ -60,35 +62,42 @@ int AsciiToBase64(int array[]) {
 		int bitsToMove;
 	
 		defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
-
-		array[i] <<= bitsToMove;
-		numberToPut = (array[i] | numberToPut);
+		
+		asciiCharArray[i] <<= bitsToMove;
+		numberToPut = (asciiCharArray[i] | numberToPut);
 	}
 	
 	return numberToPut;
 		
 }
 
-int getCharFromBase64Binary(int base64block, int position) {
+void moveBitsForLeft(int * number, int bitsToMove) {
+	*number <<= bitsToMove;
+}
+
+void moveBitsForRight(int * number, int bitsToMove) {
+	*number >>= bitsToMove;
+}
+
+void getBitsByAndComparisonWithMask(int * variableToPutResult, int binary, int mask) {
+	* variableToPutResult = ( binary & mask );
+}
+
+int getCharInSomePositionFromBase64Binary(int base64CharArrayInOneBinary, int position) {
 	
-	unsigned base64cell1 = 0 << 7;		
-	unsigned base64block1 = 0 << 7;
-	
+	unsigned base64CharBinary = 0 << 7;	
 	int bitsToMove;
+	unsigned base64mask = COMPLETE_BASE64; 
 	
 	defineBitsToMove(&bitsToMove, position, BASE64_WORD_SIZE);
 
-// criando mascara	
-	unsigned mask = 63; 
-						
-	mask = mask << bitsToMove;
-// acaba aqui 
+	moveBitsForLeft(&base64mask, bitsToMove);	
 
-	base64cell1 = (base64block & mask);
+	getBitsByAndComparisonWithMask(&base64CharBinary, base64CharArrayInOneBinary, base64mask);
 	
-	base64cell1 >>= bitsToMove;
-		
-	return base64cell1;
+	moveBitsForRight(&base64CharBinary, bitsToMove);
+	
+	return base64CharBinary;
 }
 
 void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
@@ -113,7 +122,7 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Binary, int asciiCharArraySize) {
 			
 	for (int i = 0; i < asciiCharArraySize + 1; i++) {
-		base64CharArray[i] = base64Table[getCharFromBase64Binary(base64Binary, i)];
+		base64CharArray[i] = base64Table[getCharInSomePositionFromBase64Binary(base64Binary, i)];
 	}
 	
 }
