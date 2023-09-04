@@ -26,16 +26,11 @@ int main( void ) {
 	
 	scanf("%i", &c);
 	
-	char v[3] = {'M', 'a', 'n'};
+	int v[3] = {'M', 'a', 'n'};
 	
-	unsigned mask = 0;
-	mask <<= 16;
+	unsigned base64Array = convertArrayToBase64(v);
 	
-	for(int i = 0; i < 3; i++) {
-		mask = convertArrayToBase64(i, mask, v[i]);
-	}
-			
-	putInBase64Blocks(mask, 3);
+	putInBase64Blocks(base64Array, 3);
 
 	return 0;
 }
@@ -74,24 +69,30 @@ int getBlockByPosition(int base64block, int position) {
 	return base64cell1;
 }
 
-int convertArrayToBase64(int position, int numberToPut, int number) {
+int convertArrayToBase64(int array[]) {
 	
-	int bitsToMove;
+	unsigned numberToPut = 0;
+	numberToPut <<= 16;
 	
-	switch (position) {
+	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
 		
-		case FIRST_BLOCK:
-			bitsToMove = 16;
-			break;
-		case SECOND_BLOCK: 
-			bitsToMove = 8; 
-			break;
-		case THIRD_BLOCK: 
-			bitsToMove = 0;
-	}
+		int bitsToMove;
 	
-	number <<= bitsToMove;
-	numberToPut = (number | numberToPut);
+		switch (i) {
+			
+			case FIRST_BLOCK:
+				bitsToMove = 16;
+				break;
+			case SECOND_BLOCK: 
+				bitsToMove = 8; 
+				break;
+			case THIRD_BLOCK: 
+				bitsToMove = 0;
+		}
+	
+		array[i] <<= bitsToMove;
+		numberToPut = (array[i] | numberToPut);
+	}
 	
 	return numberToPut;
 		
