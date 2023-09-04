@@ -2,7 +2,9 @@
 
 #define BYTE_SIZE 8
 #define BASE64_BLOCK_SIZE 24
+#define INT_BLOCK_SIZE 32
 #define BASE64_BYTES_NUMBER 3
+#define BASE64_WORD_SIZE 6
 #define FIRST_BLOCK 0
 #define SECOND_BLOCK 1
 #define THIRD_BLOCK 2 
@@ -11,6 +13,10 @@
 int putInBase64Blocks(int number, int size);
 
 int arrayCharToBase64Complete(int position, int x, int y);
+
+void prepareArray(int v[]);
+
+void defineBitsToMove(int * bitsToMove, int position, int size);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -27,26 +33,20 @@ int main( void ) {
 	scanf("%i", &c);
 	
 	int v[3] = {'M', 'a', 'n'};
-	int y[4];
-	
-	y[0] = base64Table[64];
-	y[1] = base64Table[64];
-	y[2] = base64Table[64];
-	y[3] = base64Table[64];
-
+	int y[4] = { base64Table[64] };
 		
-	unsigned base64Array = convertArrayToBase64(v);
+	unsigned base64Binary = AsciiToBase64(v);
 	
-	createSixBitsArray(y, base64Array, 3);
+	createBase64Words(y, base64Binary, 3);
 	
-	for(int x = 0; x < 4; x++) {
-		putchar(y[x]);
+	for(int i = 0; i < 4; i++) {
+		putchar(y[i]);
 	}
 	
 	return 0;
 }
 
-int convertArrayToBase64(int array[]) {
+int AsciiToBase64(int array[]) {
 	
 	unsigned numberToPut = 0;
 	numberToPut <<= 16;
@@ -75,28 +75,14 @@ int convertArrayToBase64(int array[]) {
 		
 }
 
-int getBlockByPosition(int base64block, int position) {
+int getBase64WordFromBinary(int base64block, int position) {
 	
 	unsigned base64cell1 = 0 << 7;		
 	unsigned base64block1 = 0 << 7;
 	
 	int bitsToMove;
 	
-	switch (position) {
-		
-		case FIRST_BLOCK:
-			bitsToMove = 18;
-			break;
-		case SECOND_BLOCK: 
-			bitsToMove = 12; 
-			break;
-		case THIRD_BLOCK: 
-			bitsToMove = 6;
-			break;
-		case FOURTH_BLOCK:		
-			bitsToMove = 0;
-
-	}
+	defineBitsToMove(&bitsToMove, position, BASE64_BLOCK_SIZE);
 	
 	unsigned mask = 63; 
 						
@@ -109,10 +95,37 @@ int getBlockByPosition(int base64block, int position) {
 	return base64cell1;
 }
 
-void createSixBitsArray(int array[], int number, int size) {
+void defineBitsToMove(int * bitsToMove, int position, int size) {
+	
+	int wordSize;
+	
+	if (size == BASE64_BLOCK_SIZE) {
+		wordSize = BASE64_WORD_SIZE;
+	} else {
+		wordSize = BYTE_SIZE;
+	}
+	
+	switch (position) {
+		
+		case FIRST_BLOCK:
+			*bitsToMove = size - (wordSize);
+			break;
+		case SECOND_BLOCK: 
+			*bitsToMove = size - (wordSize * 2); 
+			break;
+		case THIRD_BLOCK: 
+			*bitsToMove = size - (wordSize * 3);
+			break;
+		case FOURTH_BLOCK:		
+			*bitsToMove = size - (wordSize * 4);
+
+	}
+}
+
+void createBase64Words(int array[], int number, int size) {
 			
 	for (int i = 0; i < size + 1; i++) {
-		array[i] = base64Table[getBlockByPosition(number, i)];
+		array[i] = base64Table[getBase64WordFromBinary(number, i)];
 	}
 	
 }
