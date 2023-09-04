@@ -27,12 +27,52 @@ int main( void ) {
 	scanf("%i", &c);
 	
 	int v[3] = {'M', 'a', 'n'};
+	int y[4];
 	
+	y[0] = base64Table[64];
+	y[1] = base64Table[64];
+	y[2] = base64Table[64];
+	y[3] = base64Table[64];
+
+		
 	unsigned base64Array = convertArrayToBase64(v);
 	
-	putInBase64Blocks(base64Array, 3);
-
+	createSixBitsArray(y, base64Array, 3);
+	
+	for(int x = 0; x < 4; x++) {
+		putchar(y[x]);
+	}
+	
 	return 0;
+}
+
+int convertArrayToBase64(int array[]) {
+	
+	unsigned numberToPut = 0;
+	numberToPut <<= 16;
+	
+	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
+		
+		int bitsToMove;
+	
+		switch (i) {
+			
+			case FIRST_BLOCK:
+				bitsToMove = 16;
+				break;
+			case SECOND_BLOCK: 
+				bitsToMove = 8; 
+				break;
+			case THIRD_BLOCK: 
+				bitsToMove = 0;
+		}
+	
+		array[i] <<= bitsToMove;
+		numberToPut = (array[i] | numberToPut);
+	}
+	
+	return numberToPut;
+		
 }
 
 int getBlockByPosition(int base64block, int position) {
@@ -69,70 +109,11 @@ int getBlockByPosition(int base64block, int position) {
 	return base64cell1;
 }
 
-int convertArrayToBase64(int array[]) {
-	
-	unsigned numberToPut = 0;
-	numberToPut <<= 16;
-	
-	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
-		
-		int bitsToMove;
-	
-		switch (i) {
+void createSixBitsArray(int array[], int number, int size) {
 			
-			case FIRST_BLOCK:
-				bitsToMove = 16;
-				break;
-			case SECOND_BLOCK: 
-				bitsToMove = 8; 
-				break;
-			case THIRD_BLOCK: 
-				bitsToMove = 0;
-		}
-	
-		array[i] <<= bitsToMove;
-		numberToPut = (array[i] | numberToPut);
+	for (int i = 0; i < size + 1; i++) {
+		array[i] = base64Table[getBlockByPosition(number, i)];
 	}
-	
-	return numberToPut;
-		
-}
-
-int putInBase64Blocks(int number, int size) {
-		
-	unsigned base64block = malloc(BASE64_BYTES_NUMBER);	
-	
-	char firstBlock;
-	char secondBlock;
-	char thirdBlock;
-	char fourthBlock;
-	
-	if(size == 2) {
-		firstBlock = base64Table[getBlockByPosition(number, FIRST_BLOCK)];
-		secondBlock = base64Table[getBlockByPosition(number, SECOND_BLOCK)];
-		thirdBlock = base64Table[getBlockByPosition(number, THIRD_BLOCK)];
-		fourthBlock = base64Table[64];
-	}
-	
-	if(size == 1) {
-		firstBlock = base64Table[getBlockByPosition(number, FIRST_BLOCK)];
-		secondBlock = base64Table[getBlockByPosition(number, SECOND_BLOCK)];
-		thirdBlock = base64Table[64];
-		fourthBlock = base64Table[64];
-	}
-	
-	firstBlock = base64Table[getBlockByPosition(number, FIRST_BLOCK)];
-	secondBlock = base64Table[getBlockByPosition(number, SECOND_BLOCK)];
-	thirdBlock = base64Table[getBlockByPosition(number, THIRD_BLOCK)];
-	fourthBlock = base64Table[getBlockByPosition(number, FOURTH_BLOCK)];
-		
-	putchar(firstBlock);		
-	putchar(secondBlock);
-	putchar(thirdBlock);
-	putchar(fourthBlock);
-
-			
-	return 0;
 	
 }
 
