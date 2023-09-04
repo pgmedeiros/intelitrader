@@ -54,20 +54,21 @@ int main( void ) {
 
 int AsciiToBase64(int asciiCharArray[]) {
 	
-	unsigned numberToPut = 0;
-	numberToPut <<= 16;
-	
+	unsigned result = 0;
+	result <<= 16;
+		
 	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
 		
 		int bitsToMove;
 	
 		defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
 		
-		asciiCharArray[i] <<= bitsToMove;
-		numberToPut = (asciiCharArray[i] | numberToPut);
+		moveBitsForLeft(&asciiCharArray[i], bitsToMove);
+		
+		getBitsByOrComparisonWithMask(&result, asciiCharArray[i], result);		
 	}
 	
-	return numberToPut;
+	return result;
 		
 }
 
@@ -81,6 +82,10 @@ void moveBitsForRight(int * number, int bitsToMove) {
 
 void getBitsByAndComparisonWithMask(int * variableToPutResult, int binary, int mask) {
 	* variableToPutResult = ( binary & mask );
+}
+
+void getBitsByOrComparisonWithMask(int * result, int binary, int mask) {
+	* result = ( binary | mask );
 }
 
 int getCharInSomePositionFromBase64Binary(int base64CharArrayInOneBinary, int position) {
