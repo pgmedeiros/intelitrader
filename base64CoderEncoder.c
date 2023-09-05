@@ -35,6 +35,9 @@ int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 
 int const COMPLETE_BASE64 = 63;
 
+int const MASK_INT_POSITIVE = 4294967295;
+int const MASK_EMPTY = 0;
+
 int main( void ) {
 		
 	
@@ -71,7 +74,7 @@ void decode() {
 
 int AsciiToBase64(int asciiCharArray[]) {
 	
-	unsigned result = 0;
+	unsigned result = MASK_EMPTY;
 			
 	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
 		
@@ -167,29 +170,15 @@ void concatBase64Digits(unsigned * charArray, unsigned * binary) {
 
 void getAsciiValues(unsigned * binary) {
 	
+	int bitsToMove;
+	
 	for (int i = 0; i < 3; i++) {
 			
-			int x = 255; 
+			defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
+																		
+			int final = (MASK_INT_POSITIVE & *binary);
 			
-			int final;
-			
-			if ( i == 0) {
-				x <<= 16; 
-			}
-			
-			if ( i == 1) {
-				x <<= 8; 
-			}
-			
-			final = (x & *binary);
-			
-			if ( i == 0) {
-				final >>= 16; 	
-			}
-			
-			if ( i == 1) {
-				final >>= 8; 	
-			}
+			moveBitsForRight(&final, bitsToMove);
 			
 			putchar(final);
 		}	
