@@ -35,18 +35,77 @@ int main( void ) {
 
 	int asciiCharArray[3] = {'M', 'a', 'n'};
 	int base64CharArray[4] = { base64Table[64] };
+	int arrayParaTest[4] = {'T', 'W', 'F', 'u'};
 	int asciiCharArraySize;
 	
-	scanf("%i", &c);
-	
-	asciiCharArraySize = 3;
+//	scanf("%i", &c);
+//	
+//	asciiCharArraySize = 3;
+//		
+//	base64Binary = AsciiToBase64(asciiCharArray);
+//	
+//	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
+//	
+//	for(int i = 0; i < 4; i++) {
+//		putchar(base64CharArray[i]);
+//	}
+
+// recebo valor do elemento da hash 
+// junto tudo.
+	unsigned binary = 0;
+
+
+	for (int i = 0; i < 4; i++) {
 		
-	base64Binary = AsciiToBase64(asciiCharArray);
+		binary << 23;
+		
+		int x = pseudoHash(arrayParaTest[i]);
+		
+		if ( i == 0) {
+			x <<= 18;
+		}
+		
+		if ( i == 1) {
+			x <<= 18;
+			x >>= 6;
+		}
+		
+		if ( i == 2) {
+			x <<= 18;
+			x >>= 12;
+		}
+		
+		
+		binary = binary | x;
+		
+	}
 	
-	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
-	
-	for(int i = 0; i < 4; i++) {
-		putchar(base64CharArray[i]);
+	for (int i = 0; i < 3; i++) {
+		
+		int x = 255; 
+		
+		int final;
+		
+		if ( i == 0) {
+			x <<= 16; 
+		}
+		
+		if ( i == 1) {
+			x <<= 16; 
+			x >>= 8; 
+		}
+		
+		final = (x & binary);
+		
+		if ( i == 0) {
+			final >>= 16; 	
+		}
+		
+		if ( i == 1) {
+			final >>= 8; 	
+		}
+		
+		putchar(final);
 	}
 	
 	return 0;
@@ -130,5 +189,27 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 		base64CharArray[i] = base64Table[getCharInSomePositionFromBase64Binary(base64Binary, i)];
 	}
 	
+}
+
+int pseudoHash(int number) {
+	if (number >= 65 && number <= 90) {
+		return number - 65;
+	}
+	
+	if (number >= 97 && number <= 122) {
+		return number - 71;
+	}
+	
+	if (number >= 48 && number <= 57) {
+		return number + 4;
+	}
+	
+	if (number == 43) {
+		return 62;		
+	}
+	
+	if (number == 47) {
+		return 63;
+	}
 }
 
