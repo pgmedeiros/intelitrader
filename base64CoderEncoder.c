@@ -17,7 +17,7 @@ int putInBase64Blocks(int number, int size);
 
 int arrayCharToBase64Complete(int position, int x, int y);
 
-unsigned concatBase64Digits(unsigned * v, unsigned * binary);
+void concatBase64Digits(unsigned * v, unsigned * binary);
 
 void encode();
 
@@ -88,8 +88,6 @@ int AsciiToBase64(int asciiCharArray[]) {
 		
 }
 
-
-
 void moveBitsForLeft(int * number, int bitsToMove) {
 	*number <<= bitsToMove;
 }
@@ -138,7 +136,6 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 			break;
 		case FOURTH_BLOCK:		
 			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize * 4);
-
 	}
 }
 
@@ -150,26 +147,19 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 	
 }
 
-unsigned concatBase64Digits(unsigned * v, unsigned * binary) {
+void concatBase64Digits(unsigned * charArray, unsigned * binary) {
+	
+	int bitsToMove;
 	
 	for (int i = 0; i < 4; i++) {
 				
-		int x = pseudoHash(v[i]);
+		int caracter = pseudoHash(charArray[i]);
 		
-		if ( i == 0 ) {
-			x <<= 18;
-		}
+		defineBitsToMove(&bitsToMove, i, BASE64_WORD_SIZE);
 		
-		if ( i == 1) {
-			x <<= 12;
-		}
+		caracter <<= bitsToMove;
 		
-		if ( i == 2) {
-			x <<= 6;
-		}
-		
-		
-		*binary = *binary | x;
+		*binary = *binary | caracter;
 		
 	}
 	
