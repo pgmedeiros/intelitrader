@@ -38,20 +38,20 @@ int main( void ) {
 	int arrayParaTest[4] = {'V', '0', 's', '='};
 	int asciiCharArraySize;
 	
-	scanf("%i", &c);
+//	scanf("%i", &c);
+//	
+//	asciiCharArraySize = 3;
+//		
+//	base64Binary = AsciiToBase64(asciiCharArray);
+//	
+//	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
+//	
+//	for(int i = 0; i < 4; i++) {
+//		putchar(base64CharArray[i]);
+//	}
+	decoding(arrayParaTest);
 	
-	asciiCharArraySize = 3;
-		
-	base64Binary = AsciiToBase64(asciiCharArray);
-	
-	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
-	
-	for(int i = 0; i < 4; i++) {
-		putchar(base64CharArray[i]);
-	}
-//		decoding(arrayParaTest);
-	
-	
+	 
 	return 0;
 }
 
@@ -134,9 +134,8 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 	
 }
 
-void decoding(int v[]) {
-	unsigned binary;
-
+unsigned concatBase64Digits(unsigned * v, unsigned * binary) {
+	
 	for (int i = 0; i < 4; i++) {
 				
 		int x = pseudoHash(v[i]);
@@ -154,36 +153,48 @@ void decoding(int v[]) {
 		}
 		
 		
-		binary = binary | x;
+		*binary = *binary | x;
 		
 	}
 	
+}
+
+void getAsciiValues(unsigned * binary) {
+	
 	for (int i = 0; i < 3; i++) {
-		
-		int x = 255; 
-		
-		int final;
-		
-		if ( i == 0) {
-			x <<= 16; 
-		}
-		
-		if ( i == 1) {
-			x <<= 8; 
-		}
-		
-		final = (x & binary);
-		
-		if ( i == 0) {
-			final >>= 16; 	
-		}
-		
-		if ( i == 1) {
-			final >>= 8; 	
-		}
-		
-		putchar(final);
-	}
+			
+			int x = 255; 
+			
+			int final;
+			
+			if ( i == 0) {
+				x <<= 16; 
+			}
+			
+			if ( i == 1) {
+				x <<= 8; 
+			}
+			
+			final = (x & *binary);
+			
+			if ( i == 0) {
+				final >>= 16; 	
+			}
+			
+			if ( i == 1) {
+				final >>= 8; 	
+			}
+			
+			putchar(final);
+		}	
+}
+
+void decoding(int v[]) {
+	
+	unsigned binary;
+	concatBase64Digits(v, &binary);
+	getAsciiValues(&binary);
+
 }
 
 int pseudoHash(int number) {
