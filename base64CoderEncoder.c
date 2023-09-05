@@ -38,19 +38,18 @@ int main( void ) {
 	int arrayParaTest[4] = {'V', '0', 's', '='};
 	int asciiCharArraySize;
 	
-//	scanf("%i", &c);
-//	
-//	asciiCharArraySize = 3;
-//		
-//	base64Binary = AsciiToBase64(asciiCharArray);
-//	
-//	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
-//	
-//	for(int i = 0; i < 4; i++) {
-//		putchar(base64CharArray[i]);
-//	}
+	scanf("%i", &c);
 	
-	decoding(arrayParaTest);
+	asciiCharArraySize = 3;
+		
+	base64Binary = AsciiToBase64(asciiCharArray);
+	
+	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
+	
+	for(int i = 0; i < 4; i++) {
+		putchar(base64CharArray[i]);
+	}
+//		decoding(arrayParaTest);
 	
 	
 	return 0;
@@ -58,9 +57,8 @@ int main( void ) {
 
 int AsciiToBase64(int asciiCharArray[]) {
 	
-	unsigned result = 0;
-	result <<= 16;
-		
+	unsigned result;
+			
 	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
 		
 		int bitsToMove;
@@ -94,7 +92,7 @@ void getBitsByOrComparisonWithMask(int * result, int binary, int mask) {
 
 int getCharInSomePositionFromBase64Binary(int base64CharArrayInOneBinary, int position) {
 	
-	unsigned base64CharBinary = 0 << 7;	
+	unsigned base64CharBinary;	
 	int bitsToMove;
 	unsigned base64mask = COMPLETE_BASE64; 
 	
@@ -137,7 +135,7 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 }
 
 void decoding(int v[]) {
-	unsigned binary = 0;
+	unsigned binary;
 
 	for (int i = 0; i < 4; i++) {
 				
