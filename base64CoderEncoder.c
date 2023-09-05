@@ -10,6 +10,9 @@
 #define THIRD_BLOCK 2 
 #define FOURTH_BLOCK 3
 
+void decode();
+void encode();
+
 int putInBase64Blocks(int number, int size);
 
 int arrayCharToBase64Complete(int position, int x, int y);
@@ -34,12 +37,36 @@ int const COMPLETE_BASE64 = 63;
 
 int main( void ) {
 		
-	int arrayParaTest[4] = {'T', 'W', 'F', 'u'};
+	
 	encode();
 	printf("\n");
-	decode(arrayParaTest);
+	decode();
 	
 	return 0;
+}
+
+void encode() {
+	int base64CharArray[4] = { base64Table[64] };
+	int asciiCharArraySize = 3;
+	int asciiCharArray[3] = {'M', 'a', 'n'};
+	
+	int base64Binary2 = AsciiToBase64(asciiCharArray);
+	
+	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary2, asciiCharArraySize);
+	
+	for(int i = 0; i < 4; i++) {
+		putchar(base64CharArray[i]);
+	}
+
+}
+
+void decode() {
+	
+	int arrayParaTest[4] = {'S', 'm', '9', 'z'};
+	unsigned binary;
+	concatBase64Digits(arrayParaTest, &binary);
+	getAsciiValues(&binary);
+
 }
 
 int AsciiToBase64(int asciiCharArray[]) {
@@ -61,20 +88,7 @@ int AsciiToBase64(int asciiCharArray[]) {
 		
 }
 
-void encode() {
-	int base64CharArray[4] = { base64Table[64] };
-	int asciiCharArraySize = 3;
-	int asciiCharArray[3] = {'M', 'a', 'n'};
-	
-	int base64Binary2 = AsciiToBase64(asciiCharArray);
-	
-	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary2, asciiCharArraySize);
-	
-	for(int i = 0; i < 4; i++) {
-		putchar(base64CharArray[i]);
-	}
 
-}
 
 void moveBitsForLeft(int * number, int bitsToMove) {
 	*number <<= bitsToMove;
@@ -134,14 +148,6 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 		base64CharArray[i] = base64Table[getCharInSomePositionFromBase64Binary(base64Binary, i)];
 	}
 	
-}
-
-void decode(int v[]) {
-	
-	unsigned binary;
-	concatBase64Digits(v, &binary);
-	getAsciiValues(&binary);
-
 }
 
 unsigned concatBase64Digits(unsigned * v, unsigned * binary) {
