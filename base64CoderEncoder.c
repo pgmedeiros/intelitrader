@@ -14,6 +14,8 @@ int putInBase64Blocks(int number, int size);
 
 int arrayCharToBase64Complete(int position, int x, int y);
 
+unsigned concatBase64Digits(unsigned * v, unsigned * binary);
+
 void prepareArray(int v[]);
 
 void defineBitsToMove(int * bitsToMove, int position, int size);
@@ -38,20 +40,19 @@ int main( void ) {
 	int arrayParaTest[4] = {'V', '0', 's', '='};
 	int asciiCharArraySize;
 	
-//	scanf("%i", &c);
-//	
-//	asciiCharArraySize = 3;
-//		
-//	base64Binary = AsciiToBase64(asciiCharArray);
-//	
-//	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
-//	
-//	for(int i = 0; i < 4; i++) {
-//		putchar(base64CharArray[i]);
-//	}
-	decoding(arrayParaTest);
+	scanf("%i", &c);
 	
-	 
+	asciiCharArraySize = 3;
+		
+	base64Binary = AsciiToBase64(asciiCharArray);
+	
+	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary, asciiCharArraySize);
+	
+	for(int i = 0; i < 4; i++) {
+		putchar(base64CharArray[i]);
+	}
+	// decode(arrayParaTest);
+	
 	return 0;
 }
 
@@ -134,6 +135,14 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 	
 }
 
+void decode(int v[]) {
+	
+	unsigned binary;
+	concatBase64Digits(v, &binary);
+	getAsciiValues(&binary);
+
+}
+
 unsigned concatBase64Digits(unsigned * v, unsigned * binary) {
 	
 	for (int i = 0; i < 4; i++) {
@@ -187,14 +196,6 @@ void getAsciiValues(unsigned * binary) {
 			
 			putchar(final);
 		}	
-}
-
-void decoding(int v[]) {
-	
-	unsigned binary;
-	concatBase64Digits(v, &binary);
-	getAsciiValues(&binary);
-
 }
 
 int pseudoHash(int number) {
