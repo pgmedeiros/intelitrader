@@ -35,7 +35,7 @@ int main( void ) {
 
 	int asciiCharArray[3] = {'M', 'a', 'n'};
 	int base64CharArray[4] = { base64Table[64] };
-	int arrayParaTest[4] = {'T', 'W', 'F', 'u'};
+	int arrayParaTest[4] = {'V', '0', 's', '='};
 	int asciiCharArraySize;
 	
 //	scanf("%i", &c);
@@ -49,64 +49,9 @@ int main( void ) {
 //	for(int i = 0; i < 4; i++) {
 //		putchar(base64CharArray[i]);
 //	}
-
-// recebo valor do elemento da hash 
-// junto tudo.
-	unsigned binary = 0;
-
-
-	for (int i = 0; i < 4; i++) {
-		
-		binary << 23;
-		
-		int x = pseudoHash(arrayParaTest[i]);
-		
-		if ( i == 0) {
-			x <<= 18;
-		}
-		
-		if ( i == 1) {
-			x <<= 18;
-			x >>= 6;
-		}
-		
-		if ( i == 2) {
-			x <<= 18;
-			x >>= 12;
-		}
-		
-		
-		binary = binary | x;
-		
-	}
 	
-	for (int i = 0; i < 3; i++) {
-		
-		int x = 255; 
-		
-		int final;
-		
-		if ( i == 0) {
-			x <<= 16; 
-		}
-		
-		if ( i == 1) {
-			x <<= 16; 
-			x >>= 8; 
-		}
-		
-		final = (x & binary);
-		
-		if ( i == 0) {
-			final >>= 16; 	
-		}
-		
-		if ( i == 1) {
-			final >>= 8; 	
-		}
-		
-		putchar(final);
-	}
+	decoding(arrayParaTest);
+	
 	
 	return 0;
 }
@@ -191,7 +136,63 @@ void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Bi
 	
 }
 
+void decoding(int v[]) {
+	unsigned binary = 0;
+
+	for (int i = 0; i < 4; i++) {
+				
+		int x = pseudoHash(v[i]);
+		
+		if ( i == 0 ) {
+			x <<= 18;
+		}
+		
+		if ( i == 1) {
+			x <<= 12;
+		}
+		
+		if ( i == 2) {
+			x <<= 6;
+		}
+		
+		
+		binary = binary | x;
+		
+	}
+	
+	for (int i = 0; i < 3; i++) {
+		
+		int x = 255; 
+		
+		int final;
+		
+		if ( i == 0) {
+			x <<= 16; 
+		}
+		
+		if ( i == 1) {
+			x <<= 8; 
+		}
+		
+		final = (x & binary);
+		
+		if ( i == 0) {
+			final >>= 16; 	
+		}
+		
+		if ( i == 1) {
+			final >>= 8; 	
+		}
+		
+		putchar(final);
+	}
+}
+
 int pseudoHash(int number) {
+	
+	if (number == 61) {
+		return 0;
+	}
 	if (number >= 65 && number <= 90) {
 		return number - 65;
 	}
