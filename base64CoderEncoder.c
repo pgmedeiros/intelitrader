@@ -161,7 +161,7 @@ void concatBase64Digits(unsigned * charArray, unsigned * binary) {
 		defineBitsToMove(&bitsToMove, i, BASE64_WORD_SIZE);
 		
 		caracter <<= bitsToMove;
-		
+				
 		*binary = *binary | caracter;
 		
 	}
@@ -186,6 +186,18 @@ void getAsciiValues(unsigned * binary) {
 
 int pseudoHash(int number) {
 	
+	if (number == 43) {
+		return 62;		
+	}
+	
+	if (number == 47) {
+		return 63;
+	}
+	
+	if (number >= 48 && number <= 57) {
+		return number + 4;
+	}
+	
 	if (number == 61) {
 		return 0;
 	}
@@ -197,16 +209,5 @@ int pseudoHash(int number) {
 		return number - 71;
 	}
 	
-	if (number >= 48 && number <= 57) {
-		return number + 4;
-	}
-	
-	if (number == 43) {
-		return 62;		
-	}
-	
-	if (number == 47) {
-		return 63;
-	}
 }
 
