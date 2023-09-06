@@ -57,7 +57,7 @@ void encode() {
 	
 	createSingleBinary(asciiCharArray, BYTE_SIZE, &binary);
 	
-	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE);
+	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
 	convertToBase64Value(base64CharArray);
 	
@@ -121,11 +121,11 @@ void getBitsByOrComparisonWithMask(int * result, int binary, int mask) {
 	* result = ( binary | mask );
 }
 
-int getBitsFromSpecificPosition(int binary, int position, int wordSize) {
+int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask) {
 	
 	unsigned base64CharBinary;	
 	int bitsToMove;
-	unsigned base64mask = COMPLETE_BASE64; 
+	unsigned base64mask =  mask; 
 	
 	defineBitsToMove(&bitsToMove, position, wordSize);
 
@@ -156,10 +156,10 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize) { // tornar essa funçao genérica
+void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize, int mask) {
 			
 	for (int i = 0; i < arraySize + 1; i++) {
-		array[i] = getBitsFromSpecificPosition(binary, i, wordSize);
+		array[i] = getBitsFromSpecificPosition(binary, i, wordSize, mask);
 	}
 	
 }
