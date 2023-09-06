@@ -10,20 +10,15 @@
 #define THIRD_BLOCK 2 
 #define FOURTH_BLOCK 3
 
+void encode();
 void decode();
-void encode();
-
-int putInBase64Blocks(int number, int size);
-
-int arrayCharToBase64Complete(int position, int x, int y);
-
-void concatBase64Digits(unsigned * v, unsigned * binary);
-
-void encode();
-
-void prepareArray(int v[]);
-
-void defineBitsToMove(int * bitsToMove, int position, int size);
+void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int numberOfWords);
+void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize, int mask);
+void convertToBase64Value(int * array);
+int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask);
+void getValueInBase64(int * v);
+void defineBitsToMove(int * bitsToMove, int position, int wordSize);
+int pseudoHash(int number);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -34,7 +29,6 @@ int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 					  '8', '9', '+',  '/', '='};
 
 int const COMPLETE_BASE64 = 63;
-
 int const MASK_INT_POSITIVE = 4294967295;
 int const MASK_EMPTY = 0;
 
@@ -79,25 +73,6 @@ void decode() {
 
 }
 
-void getValueInBase64(int * v) {
-	for (int i = 0; i < 4; i++) {
-		v[i] = pseudoHash(v[i]);
-	}
-}
-
-
-void write(unsigned * v) {
-	for(int i = 0; i < 4; i++) {
-		putchar(v[i]);
-	}
-}
-
-void convertToBase64Value(int * array) {
-	for (int i = 0; i < 4; i++) {
-		array[i] = base64Table[array[i]];
-	}
-}
-
 void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int numberOfWords) {
 				
 	for (int i = 0; i < numberOfWords; i++) {
@@ -112,6 +87,14 @@ void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int nu
 	}
 }
 
+void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize, int mask) {
+			
+	for (int i = 0; i < arraySize + 1; i++) {
+		array[i] = getBitsFromSpecificPosition(binary, i, wordSize, mask);
+	}
+	
+}
+
 int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask) {
 	
 	int bitsToMove;	
@@ -124,6 +107,25 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 	binary >>= bitsToMove;
 	
 	return binary;
+}
+
+void convertToBase64Value(int * array) {
+	for (int i = 0; i < 4; i++) {
+		array[i] = base64Table[array[i]];
+	}
+}
+
+void getValueInBase64(int * v) {
+	for (int i = 0; i < 4; i++) {
+		v[i] = pseudoHash(v[i]);
+	}
+}
+
+
+void write(unsigned * v) {
+	for(int i = 0; i < 4; i++) {
+		putchar(v[i]);
+	}
 }
 
 void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
@@ -142,32 +144,6 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 		case FOURTH_BLOCK:		
 			*bitsToMove = BASE64_BLOCK_SIZE - (wordSize * 4);
 	}
-}
-
-void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize, int mask) {
-			
-	for (int i = 0; i < arraySize + 1; i++) {
-		array[i] = getBitsFromSpecificPosition(binary, i, wordSize, mask);
-	}
-	
-}
-
-void concatBase64Digits(unsigned * charArray, unsigned * binary) {
-	
-	int bitsToMove;
-	
-	for (int i = 0; i < 4; i++) {
-				
-		int caracter = pseudoHash(charArray[i]);
-		
-		defineBitsToMove(&bitsToMove, i, BASE64_WORD_SIZE);
-		
-		caracter <<= bitsToMove;
-				
-		*binary = *binary | caracter;
-		
-	}
-	
 }
 
 void getAsciiValues(unsigned * binary) {
