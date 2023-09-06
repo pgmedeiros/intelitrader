@@ -29,8 +29,10 @@ int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 					  '8', '9', '+',  '/', '='};
 
 int const COMPLETE_BASE64 = 63;
+int const COMPLETE_ASCII = 255;
 int const MASK_INT_POSITIVE = 4294967295;
 int const MASK_EMPTY = 0;
+int const ASCII_ARRAY_SIZE = 3;
 
 int main( void ) {
 		
@@ -62,14 +64,17 @@ void encode() {
 void decode() {
 	
 	int arrayParaTest[4] = {'S', 'm', '9', 'z'};
+	int arrayAscii[3];
 	unsigned binary = 0;
 	int bitsToMove;
 	
 	getValueInBase64(arrayParaTest);
 
 	createSingleBinary(arrayParaTest, BASE64_WORD_SIZE, &binary, 4);	
+	
+	separateBitsToSomeSize(arrayAscii, binary, ASCII_ARRAY_SIZE, BYTE_SIZE, COMPLETE_ASCII);
 
-	getAsciiValues(&binary);
+	write(arrayAscii);
 
 }
 
