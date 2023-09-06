@@ -55,7 +55,7 @@ void encode() {
 	int asciiCharArray[3] = {'M', 'a', 'n'};
 	int binary; 
 	
-	createSingleBinary(asciiCharArray, BYTE_SIZE, &binary);
+	createSingleBinary(asciiCharArray, BYTE_SIZE, &binary, 3);
 	
 	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
@@ -68,12 +68,21 @@ void encode() {
 void decode() {
 	
 	int arrayParaTest[4] = {'S', 'm', '9', 'z'};
-	unsigned binary;
+	unsigned binary = 0;
+	int bitsToMove;
 	
-	concatBase64Digits(arrayParaTest, &binary);
+	getValueInBase64(arrayParaTest);
+
+	createSingleBinary(arrayParaTest, 6, &binary, 4);	
 
 	getAsciiValues(&binary);
 
+}
+
+void getValueInBase64(int * v) {
+	for (int i = 0; i < 4; i++) {
+		v[i] = pseudoHash(v[i]);
+	}
 }
 
 
@@ -89,11 +98,9 @@ void convertToBase64Value(int * array) {
 	}
 }
 
-void createSingleBinary(int asciiCharArray[], int size, int * baseBinary) {
-	
-	unsigned result = MASK_EMPTY;
-			
-	for (int i = 0; i < BASE64_BYTES_NUMBER; i++) {
+void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int numberOfWords) {
+				
+	for (int i = 0; i < numberOfWords; i++) {
 		
 		int bitsToMove;
 	
@@ -101,7 +108,7 @@ void createSingleBinary(int asciiCharArray[], int size, int * baseBinary) {
 		
 		moveBitsForLeft(&asciiCharArray[i], bitsToMove);
 		
-		getBitsByOrComparisonWithMask(baseBinary, asciiCharArray[i], *baseBinary);		
+		*baseBinary =  *baseBinary | asciiCharArray[i];		
 	}
 }
 
