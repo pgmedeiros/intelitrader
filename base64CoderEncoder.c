@@ -73,7 +73,7 @@ void decode() {
 	
 	getValueInBase64(arrayParaTest);
 
-	createSingleBinary(arrayParaTest, 6, &binary, 4);	
+	createSingleBinary(arrayParaTest, BASE64_WORD_SIZE, &binary, 4);	
 
 	getAsciiValues(&binary);
 
@@ -106,43 +106,24 @@ void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int nu
 	
 		defineBitsToMove(&bitsToMove, i, size);
 		
-		moveBitsForLeft(&asciiCharArray[i], bitsToMove);
+		asciiCharArray[i] <<= bitsToMove;
 		
 		*baseBinary =  *baseBinary | asciiCharArray[i];		
 	}
 }
 
-void moveBitsForLeft(int * number, int bitsToMove) {
-	*number <<= bitsToMove;
-}
-
-void moveBitsForRight(int * number, int bitsToMove) {
-	*number >>= bitsToMove;
-}
-
-void getBitsByAndComparisonWithMask(int * variableToPutResult, int binary, int mask) {
-	* variableToPutResult = ( binary & mask );
-}
-
-void getBitsByOrComparisonWithMask(int * result, int binary, int mask) {
-	* result = ( binary | mask );
-}
-
 int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask) {
 	
-	unsigned base64CharBinary;	
-	int bitsToMove;
-	unsigned base64mask =  mask; 
-	
+	int bitsToMove;	
 	defineBitsToMove(&bitsToMove, position, wordSize);
-
-	moveBitsForLeft(&base64mask, bitsToMove);	
-
-	getBitsByAndComparisonWithMask(&base64CharBinary, binary, base64mask);
 	
-	moveBitsForRight(&base64CharBinary, bitsToMove);
+	mask <<= bitsToMove;
 	
-	return base64CharBinary;
+	binary = binary & mask;
+	
+	binary >>= bitsToMove;
+	
+	return binary;
 }
 
 void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
@@ -197,10 +178,10 @@ void getAsciiValues(unsigned * binary) {
 			
 			defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
 																		
-			int final = (MASK_INT_POSITIVE & *binary);
+			int final = MASK_INT_POSITIVE & *binary;
 			
-			moveBitsForRight(&final, bitsToMove);
-			
+			final >>= bitsToMove;
+						
 			putchar(final);
 		}	
 }
