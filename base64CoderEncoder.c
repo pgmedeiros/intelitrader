@@ -151,22 +151,6 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-void getAsciiValues(unsigned * binary) {
-	
-	int bitsToMove;
-	
-	for (int i = 0; i < 3; i++) {
-			
-			defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
-																		
-			int final = MASK_INT_POSITIVE & *binary;
-			
-			final >>= bitsToMove;
-						
-			putchar(final);
-		}	
-}
-
 int pseudoHash(int number) {
 	
 	if (number == 43) {
