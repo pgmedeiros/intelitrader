@@ -49,18 +49,24 @@ int main( void ) {
 }
 
 void encode() {
+	
 	int base64CharArray[4] = { base64Table[64] };
 	int asciiCharArraySize = 3;
 	int asciiCharArray[3] = {'M', 'a', 'n'};
+	int binary; 
 	
-	int base64Binary2 = AsciiToBase64(asciiCharArray);
+	createSingleBinary(asciiCharArray, BYTE_SIZE, &binary);
 	
-	translateBinaryArrayToCharArrayInBase64(base64CharArray, base64Binary2, asciiCharArraySize);
+	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize);
 	
-	for(int i = 0; i < 4; i++) {
-		putchar(base64CharArray[i]);
-	}
+	write(base64CharArray);
 
+}
+
+void write(unsigned * v) {
+	for(int i = 0; i < 4; i++) {
+		putchar(v[i]);
+	}
 }
 
 void decode() {
@@ -72,7 +78,7 @@ void decode() {
 
 }
 
-int AsciiToBase64(int asciiCharArray[]) {
+void createSingleBinary(int asciiCharArray[], int size, int * baseBinary) {
 	
 	unsigned result = MASK_EMPTY;
 			
@@ -80,15 +86,12 @@ int AsciiToBase64(int asciiCharArray[]) {
 		
 		int bitsToMove;
 	
-		defineBitsToMove(&bitsToMove, i, BYTE_SIZE);
+		defineBitsToMove(&bitsToMove, i, size);
 		
 		moveBitsForLeft(&asciiCharArray[i], bitsToMove);
 		
-		getBitsByOrComparisonWithMask(&result, asciiCharArray[i], result);		
+		getBitsByOrComparisonWithMask(baseBinary, asciiCharArray[i], *baseBinary);		
 	}
-	
-	return result;
-		
 }
 
 void moveBitsForLeft(int * number, int bitsToMove) {
@@ -142,7 +145,7 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-void translateBinaryArrayToCharArrayInBase64(int base64CharArray[], int base64Binary, int asciiCharArraySize) {
+void separateBitsToSomeSize(int base64CharArray[], int base64Binary, int asciiCharArraySize) {
 			
 	for (int i = 0; i < asciiCharArraySize + 1; i++) {
 		base64CharArray[i] = base64Table[getCharInSomePositionFromBase64Binary(base64Binary, i)];
