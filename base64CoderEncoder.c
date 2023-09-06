@@ -59,14 +59,10 @@ void encode() {
 	
 	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize);
 	
+	convertToBase64Value(base64CharArray);
+	
 	write(base64CharArray);
 
-}
-
-void write(unsigned * v) {
-	for(int i = 0; i < 4; i++) {
-		putchar(v[i]);
-	}
 }
 
 void decode() {
@@ -76,6 +72,19 @@ void decode() {
 	concatBase64Digits(arrayParaTest, &binary);
 	getAsciiValues(&binary);
 
+}
+
+
+void write(unsigned * v) {
+	for(int i = 0; i < 4; i++) {
+		putchar(v[i]);
+	}
+}
+
+void convertToBase64Value(int * array) {
+	for (int i = 0; i < 4; i++) {
+		array[i] = base64Table[array[i]];
+	}
 }
 
 void createSingleBinary(int asciiCharArray[], int size, int * baseBinary) {
@@ -110,7 +119,7 @@ void getBitsByOrComparisonWithMask(int * result, int binary, int mask) {
 	* result = ( binary | mask );
 }
 
-int getCharInSomePositionFromBase64Binary(int base64CharArrayInOneBinary, int position) {
+int getBitsFromSomePosition(int base64CharArrayInOneBinary, int position) {
 	
 	unsigned base64CharBinary;	
 	int bitsToMove;
@@ -145,10 +154,10 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-void separateBitsToSomeSize(int base64CharArray[], int base64Binary, int asciiCharArraySize) {
+void separateBitsToSomeSize(int array[], int binary, int arraySize) { // tornar essa funçao genérica
 			
-	for (int i = 0; i < asciiCharArraySize + 1; i++) {
-		base64CharArray[i] = base64Table[getCharInSomePositionFromBase64Binary(base64Binary, i)];
+	for (int i = 0; i < arraySize + 1; i++) {
+		array[i] = getBitsFromSomePosition(binary, i);
 	}
 	
 }
