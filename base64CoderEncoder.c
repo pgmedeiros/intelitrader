@@ -34,30 +34,61 @@ int const MASK_INT_POSITIVE = 4294967295;
 int const MASK_EMPTY = 0;
 int const ASCII_ARRAY_SIZE = 3;
 
-int main( void ) {
+int main( ) {
 		
 	
-	encode();
-	printf("\n");
-	decode();
+	FILE *toRead;
+	FILE *toWrite;
+	char readed[3];
+	int counter = 0;
+	
+	if((toRead = fopen("toread", "r")) == NULL) {
+		printf("Não foi possivel abrir o arquivo de leitura");
+	}
+	
+	if((toWrite = fopen("towrite", "w")) == NULL) {
+		printf("Não foi possivel abrir o arquivo de escrita");
+	}
+	
+	
+	while(!feof(toRead)) {
+		
+		while(counter != 3) {
+			fscanf(toRead, "%c", &readed[counter]);
+			counter++;
+	
+		}
+		
+		printf("%c", readed[counter]);
+		
+		counter = 0;
+	}
+	
+			encode(toWrite, readed);
+
 	
 	return 0;
 }
 
-void encode() {
+void encode(FILE * toWrite, char c[]) {
 	
 	int base64CharArray[4] = { base64Table[64] };
 	int asciiCharArraySize = 3;
-	int asciiCharArray[3] = {'M', 'a', 'n'};
-	int binary; 
+	int binary = 0; 
+	int array[3];
 	
-	createSingleBinary(asciiCharArray, BYTE_SIZE, &binary, 3);
+	for(int i = 0; i < 3; i++) {
+		array[i] = c[i];
+	}
+	
+	
+	createSingleBinary(array, BYTE_SIZE, &binary, 3);
 	
 	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
 	convertToBase64Value(base64CharArray);
 	
-	write(base64CharArray);	
+	write(toWrite, base64CharArray);	
 
 }
 
@@ -78,7 +109,7 @@ void decode() {
 
 }
 
-void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int numberOfWords) {
+void createSingleBinary(int x[], int size, int * baseBinary, int numberOfWords) {
 				
 	for (int i = 0; i < numberOfWords; i++) {
 		
@@ -86,9 +117,9 @@ void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int nu
 	
 		defineBitsToMove(&bitsToMove, i, size);
 		
-		asciiCharArray[i] <<= bitsToMove;
+		x[i] <<= bitsToMove;
 		
-		*baseBinary =  *baseBinary | asciiCharArray[i];		
+		*baseBinary =  *baseBinary | x[i];		
 	}
 }
 
@@ -127,9 +158,9 @@ void getValueInBase64(int * v) {
 }
 
 
-void write(unsigned * v) {
+void write(FILE * toWrite, unsigned * v) {
 	for(int i = 0; i < 4; i++) {
-		putchar(v[i]);
+		fprintf(toWrite, "%c", v[i]);
 	}
 }
 
