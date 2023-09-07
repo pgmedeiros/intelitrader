@@ -39,7 +39,7 @@ int main( ) {
 	
 	FILE *toRead;
 	FILE *toWrite;
-	char readed[3];
+	char readed[10000];
 	int counter = 0;
 	
 	if((toRead = fopen("toRead.txt", "r")) == NULL) {
@@ -56,17 +56,33 @@ int main( ) {
 	counter = 1;
 	char teste;
 	
+	int var = 0;
+	
 	while(!feof(toRead)) {
 		
-		teste = fgetc(toRead);
-		
-		if (teste != EOF) {
-			readed[counter] = teste;
+		for(int i = 0; i < 3; i ++) {
+			
+			teste = fgetc(toRead);
+			
+			if (teste != EOF) {
+				readed[counter] = teste;
+			}
+			counter++;	
+			
 		}
-		counter++;	
+		
+		
+		encode(toWrite, readed, var);
+		
+		var++;
+		
+		
+			
 	}
+
 	
-	encode(toWrite, readed);
+	
+		
 
 	
 	
@@ -75,17 +91,18 @@ int main( ) {
 	return 0;
 }
 
-void encode(FILE * toWrite, char c[]) {
+void encode(FILE * toWrite, char c[], int var) {
 	
 	int base64CharArray[4] = { base64Table[64] };
 	int asciiCharArraySize = 3;
 	int binary = 0; 
 	int array[3];
+	int y;
 	
 	for(int i = 0; i < 3; i++) {
-		array[i] = c[i];
+		y = i + (var  * 3);
+		array[i] = c[y];
 	}
-	
 	
 	createSingleBinary(array, BYTE_SIZE, &binary, 3);
 	
