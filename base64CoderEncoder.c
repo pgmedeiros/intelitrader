@@ -19,6 +19,10 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 void getValueInBase64(int * v);
 void defineBitsToMove(int * bitsToMove, int position, int wordSize);
 int asciiToBase64Index(int number);
+void base64IndexToValue(int * array);
+void write(FILE * toWrite, unsigned * v);
+void convertArrayToBase64Index(int * v);
+int base64ValueToIndex(int number);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -35,7 +39,7 @@ int const MASK_EMPTY = 0;
 int const ASCII_ARRAY_SIZE = 3;
 int const BASE64_EMPTY_VALUE = 61;
 
-int main( ) {
+int main() {
 		
 	
 	FILE *toRead;
@@ -43,44 +47,62 @@ int main( ) {
 	char readed[10000];
 	int counter = 0;
 	
-	if((toRead = fopen("toRead.txt", "r")) == NULL) {
-		printf("Não foi possivel abrir o arquivo de leitura");
+	char toWritePath[60];
+	char toReadPath[60];
+	
+	char option;
+	
+	printf("Codificar ou Decodificar? Escolha 'c' ou 'd'\n");
+	scanf("%c", &option);
+	
+	printf("Caminho do arquivo fonte\n");
+	scanf("%s", &toReadPath);
+	
+	printf("Caminho do arquivo destino\n");
+	scanf("%s", &toWritePath);
+	
+	
+	toRead = fopen(toReadPath, "r");
+	toWrite = fopen(toWritePath, "w");
+	
+	
+	if (toRead == NULL || toWrite == NULL) {
+		printf("Erro ao tentar ler um dos arquivos");
+		exit(1);
 	}
 	
-	if((toWrite = fopen("toWrite.txt", "w")) == NULL) {
-		printf("Não foi possivel abrir o arquivo de escrita");
-	}
+	if (option == 'c') {
+		char readedChar;
 	
-	char readedChar;
-	
-	readed[0] = fgetc(toRead);
-	counter = 1;
-	char teste;
-	
-	int var = 0;
-	
-	while(!feof(toRead)) {
+		readed[0] = fgetc(toRead);
+		counter = 1;
+		char teste;
 		
-		for(int i = 0; i < 3; i ++) {
+		int var = 0;
+		
+		while(!feof(toRead)) {
 			
-			teste = fgetc(toRead);
-			
-			if (teste != EOF) {
-				readed[counter] = teste;
+			for(int i = 0; i < 3; i ++) {
+				
+				teste = fgetc(toRead);
+				
+				if (teste != EOF) {
+					readed[counter] = teste;
+				}
+				counter++;	
+				
 			}
-			counter++;	
 			
+			encode(toWrite, readed, var);
+			
+			var++;			
 		}
+	} else {
 		
+		printf("Chora boy");
 		
-		encode(toWrite, readed, var);
-		
-		var++;
-		
-		
-			
 	}
-	
+		
 	return 0;
 }
 
@@ -120,7 +142,7 @@ void decode() {
 	
 	separateBitsToSomeSize(arrayAscii, binary, ASCII_ARRAY_SIZE, BYTE_SIZE, COMPLETE_ASCII);
 
-	write(arrayAscii);
+//	write(arrayAscii);
 
 }
 
