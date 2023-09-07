@@ -10,19 +10,19 @@
 #define THIRD_BLOCK 2 
 #define FOURTH_BLOCK 3
 
-void encode();
-void decode();
+void encode(FILE * toWrite, char c[], int var);
+void decode(FILE * toWrite, char c[], int var);
 void createSingleBinary(int asciiCharArray[], int size, int * baseBinary, int numberOfWords);
 void separateBitsToSomeSize(int array[], int binary, int arraySize, int wordSize, int mask);
 void convertToBase64Value(int * array);
-int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask);
+int  getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask);
 void getValueInBase64(int * v);
 void defineBitsToMove(int * bitsToMove, int position, int wordSize);
-int asciiToBase64Index(int number);
+int  asciiToBase64Index(int number);
 void base64IndexToValue(int * array);
-void write(FILE * toWrite, unsigned * v);
+void write(FILE * toWrite, unsigned * v, int size);
 void convertArrayToBase64Index(int * v);
-int base64ValueToIndex(int number);
+int  base64ValueToIndex(int number);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -99,8 +99,32 @@ int main() {
 		}
 	} else {
 		
-		printf("Chora boy");
+		char readedChar;
+	
+		readed[0] = fgetc(toRead);
+		counter = 1;
+		char teste;
 		
+		int var = 0;
+		
+		while(!feof(toRead)) {
+			
+			for(int i = 0; i < 4; i ++) {
+				
+				teste = fgetc(toRead);
+				
+				if (teste != EOF) {
+					readed[counter] = teste;
+				}
+				counter++;	
+				
+			}
+			
+			decode(toWrite, readed, var);
+			
+			var++;			
+		
+		}
 	}
 		
 	return 0;
@@ -125,24 +149,31 @@ void encode(FILE * toWrite, char c[], int var) {
 	
 	base64IndexToValue(base64CharArray);
 	
-	write(toWrite, base64CharArray);	
+	write(toWrite, base64CharArray, 4);	
 
 }
 
-void decode() {
+void decode(FILE * toWrite, char c[], int var) {
 	
-	int arrayParaTest[4] = {'S', 'm', '9', 'z'};
 	int arrayAscii[3];
 	unsigned binary = 0;
 	int bitsToMove;
 	
-	convertArrayToBase64Index(arrayParaTest);
+	int array[4];
+	int y;
+	
+	for(int i = 0; i < 4; i++) {
+		y = i + (var * 4);
+		array[i] = c[y];
+	}
+	
+	convertArrayToBase64Index(array);
 
-	createSingleBinary(arrayParaTest, BASE64_WORD_SIZE, &binary, 4);	
+	createSingleBinary(array, BASE64_WORD_SIZE, &binary, 4);	
 	
 	separateBitsToSomeSize(arrayAscii, binary, ASCII_ARRAY_SIZE, BYTE_SIZE, COMPLETE_ASCII);
 
-//	write(arrayAscii);
+	write(toWrite, arrayAscii, 3);
 
 }
 
@@ -182,8 +213,11 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 	return binary;
 }
 
-void write(FILE * toWrite, unsigned * v) {
-	for(int i = 0; i < 4; i++) {
+void write(FILE * toWrite, unsigned * v, int size) {
+	for(int i = 0; i < size; i++) {
+		if (v[i] == NULL) {
+			continue;
+		}
 		fprintf(toWrite, "%c", v[i]);
 	}
 }
@@ -253,6 +287,5 @@ void base64IndexToValue(int * array) {
 		}
 	}
 }
-
 
 
