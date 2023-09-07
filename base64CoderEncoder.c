@@ -33,6 +33,7 @@ int const COMPLETE_ASCII = 255;
 int const MASK_INT_POSITIVE = 4294967295;
 int const MASK_EMPTY = 0;
 int const ASCII_ARRAY_SIZE = 3;
+int const BASE64_EMPTY_VALUE = 61;
 
 int main( ) {
 		
@@ -79,14 +80,6 @@ int main( ) {
 		
 			
 	}
-
-	
-	
-		
-
-	
-	
-	printf("joseph");
 	
 	return 0;
 }
@@ -168,8 +161,16 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 }
 
 void convertToBase64Value(int * array) {
-	for (int i = 0; i < 4; i++) {
-		array[i] = base64Table[array[i]];
+	
+	for (int i = 3; i >= 0; i--) {
+		
+		if (i == 3 && array[i] == 0) {
+			array[i] = BASE64_EMPTY_VALUE;
+		} else if ( i < 3 && array[i + 1] == BASE64_EMPTY_VALUE && array[i] == 0) {
+			array[i] = BASE64_EMPTY_VALUE;	
+		} else {
+			array[i] = base64Table[array[i]];
+		}
 	}
 }
 
@@ -205,7 +206,7 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 }
 
 int pseudoHash(int number) {
-	
+
 	if (number == 43) {
 		return 62;		
 	}
