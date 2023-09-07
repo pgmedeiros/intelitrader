@@ -42,30 +42,35 @@ int main( ) {
 	char readed[3];
 	int counter = 0;
 	
-	if((toRead = fopen("toread", "r")) == NULL) {
+	if((toRead = fopen("toRead.txt", "r")) == NULL) {
 		printf("Não foi possivel abrir o arquivo de leitura");
 	}
 	
-	if((toWrite = fopen("towrite", "w")) == NULL) {
+	if((toWrite = fopen("toWrite.txt", "w")) == NULL) {
 		printf("Não foi possivel abrir o arquivo de escrita");
 	}
 	
+	char readedChar;
+	
+	readed[0] = fgetc(toRead);
+	counter = 1;
+	char teste;
 	
 	while(!feof(toRead)) {
 		
-		while(counter != 3) {
-			fscanf(toRead, "%c", &readed[counter]);
-			counter++;
-	
+		teste = fgetc(toRead);
+		
+		if (teste != EOF) {
+			readed[counter] = teste;
 		}
-		
-		printf("%c", readed[counter]);
-		
-		counter = 0;
+		counter++;	
 	}
 	
-			encode(toWrite, readed);
+	encode(toWrite, readed);
 
+	
+	
+	printf("joseph");
 	
 	return 0;
 }
