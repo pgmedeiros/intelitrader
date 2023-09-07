@@ -18,7 +18,7 @@ void convertToBase64Value(int * array);
 int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask);
 void getValueInBase64(int * v);
 void defineBitsToMove(int * bitsToMove, int position, int wordSize);
-int pseudoHash(int number);
+int asciiToBase64Index(int number);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -101,7 +101,7 @@ void encode(FILE * toWrite, char c[], int var) {
 	
 	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
-	convertToBase64Value(base64CharArray);
+	base64IndexToValue(base64CharArray);
 	
 	write(toWrite, base64CharArray);	
 
@@ -114,7 +114,7 @@ void decode() {
 	unsigned binary = 0;
 	int bitsToMove;
 	
-	getValueInBase64(arrayParaTest);
+	convertArrayToBase64Index(arrayParaTest);
 
 	createSingleBinary(arrayParaTest, BASE64_WORD_SIZE, &binary, 4);	
 	
@@ -160,27 +160,6 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 	return binary;
 }
 
-void convertToBase64Value(int * array) {
-	
-	for (int i = 3; i >= 0; i--) {
-		
-		if (i == 3 && array[i] == 0) {
-			array[i] = BASE64_EMPTY_VALUE;
-		} else if ( i < 3 && array[i + 1] == BASE64_EMPTY_VALUE && array[i] == 0) {
-			array[i] = BASE64_EMPTY_VALUE;	
-		} else {
-			array[i] = base64Table[array[i]];
-		}
-	}
-}
-
-void getValueInBase64(int * v) {
-	for (int i = 0; i < 4; i++) {
-		v[i] = pseudoHash(v[i]);
-	}
-}
-
-
 void write(FILE * toWrite, unsigned * v) {
 	for(int i = 0; i < 4; i++) {
 		fprintf(toWrite, "%c", v[i]);
@@ -205,7 +184,14 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-int pseudoHash(int number) {
+
+void convertArrayToBase64Index(int * v) {
+	for (int i = 0; i < 4; i++) {
+		v[i] = base64ValueToIndex(v[i]);
+	}
+}
+
+int base64ValueToIndex(int number) {
 
 	if (number == 43) {
 		return 62;		
@@ -231,4 +217,20 @@ int pseudoHash(int number) {
 	}
 	
 }
+
+void base64IndexToValue(int * array) {
+	
+	for (int i = 3; i >= 0; i--) {
+		
+		if (i == 3 && array[i] == 0) {
+			array[i] = BASE64_EMPTY_VALUE;
+		} else if ( i < 3 && array[i + 1] == BASE64_EMPTY_VALUE && array[i] == 0) {
+			array[i] = BASE64_EMPTY_VALUE;	
+		} else {
+			array[i] = base64Table[array[i]];
+		}
+	}
+}
+
+
 
