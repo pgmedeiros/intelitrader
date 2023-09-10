@@ -22,6 +22,12 @@ Node * getNode() {
 	node->bfactor = 0; 
 }
 
+int rightRotation(Node ** root) {
+	Node *aux = *root;
+	*root = aux->left;
+	(*root)->right = aux;
+}
+
 int insertListaRecursivo(Node * root, Node * node) {
 	
 	int retorno;
@@ -53,7 +59,23 @@ int insertListaRecursivo(Node * root, Node * node) {
 	
 	root->bfactor += retorno;
 	
-	return retorno;
+	if (root->bfactor >= 2) {
+		printf("%i maior que dois", root->key);
+	}
+	
+	if (root->bfactor <= -2) {
+		
+		rightRotation(&root);
+		
+		printf("%i root\n", root->key);
+		printf("%i left\n", root->left->key);
+		printf("%i right\n", root->right->key);
+		
+		root->bfactor = 0;
+		retorno = root->bfactor;
+	}
+	
+	return root;
 	
 	
 }
@@ -62,34 +84,35 @@ int main( void ) {
 	
 	Node * root = getNode();
 	root->value = 1;
-	root->key = 10;	
+	root->key = 20;	
 	
 	Node * nodeToInsert = getNode();
-	nodeToInsert->key = 9;
+	nodeToInsert->key = 10;
 	
 	Node * nodeToInsert2 = getNode();
-	nodeToInsert2->key = 20;
+	nodeToInsert2->key = 9;
 	
-	Node * nodeToInsert3 = getNode();
-	nodeToInsert3->key = 25;
-	
-	Node * nodeToInsert4 = getNode();
-	nodeToInsert4->key = 19;
-	
-	Node * nodeToInsert5 = getNode();
-	nodeToInsert5->key = 2;
-	
-	Node * nodeToInsert6 = getNode();
-	nodeToInsert6->key = 1;
+//	Node * nodeToInsert3 = getNode();
+//	nodeToInsert3->key = 11;
+//	
+//	Node * nodeToInsert4 = getNode();
+//	nodeToInsert4->key = 19;
+//	
+//	Node * nodeToInsert5 = getNode();
+//	nodeToInsert5->key = 2;
+//	
+//	Node * nodeToInsert6 = getNode();
+//	nodeToInsert6->key = 1;
 	
 	insertListaRecursivo(root, nodeToInsert);
-	insertListaRecursivo(root, nodeToInsert2);
-	insertListaRecursivo(root, nodeToInsert3);
+	root = insertListaRecursivo(root, nodeToInsert2);
+//	insertListaRecursivo(root, nodeToInsert3);
 //	insertListaRecursivo(root, nodeToInsert4);
 //	insertListaRecursivo(root, nodeToInsert5);
 //	insertListaRecursivo(root, nodeToInsert6);
 
 
 	printf("menos cinco %i", root->bfactor);
+	
 
 }
