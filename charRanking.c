@@ -19,10 +19,46 @@ Node * getNode() {
 	node->left = NULL;
 	node->right = NULL;
 	node->key = NULL;
-	node->bfactor = 0;
+	node->bfactor = 0; 
 }
 
-void insert(Node * root, Node * node) {
+int insertListaRecursivo(Node * root, Node * node) {
+	
+	int retorno;
+	
+	if (node->key == root->key) { // debugar esse if
+		root->value++;
+		return;
+	}
+	
+	if (node->key > root->key && root->right == NULL) {
+		root->right = node;
+		root->bfactor += 1;
+		return root->bfactor;	
+		
+	}
+	if (node->key < root->key && root->left == NULL) {
+		root->left = node;
+		root->bfactor += -1;
+		return root->bfactor;	
+	}
+		
+	if (node->key > root->key) {
+		retorno = insertListaRecursivo(root->right, node);
+	}
+	
+	if (node->key < root->key) {
+		retorno = insertListaRecursivo(root->left, node);
+	}
+	
+	root->bfactor += retorno;
+	
+	return retorno;
+	
+	
+}
+
+int insert(Node * root, Node * node) {
 	
 	Node * current = root;
 	Node * father;
@@ -42,16 +78,16 @@ void insert(Node * root, Node * node) {
 	
 	if(current != NULL) {
 		current->value++;
-		return;
+		return 0;
 	}
 		
 	if (current == NULL && node->key > father->key) {
 		father->right = node;
-		return;
+		return 1;
 	}
 	if (current == NULL && node->key < father->key) {
 		father->left = node;
-		return;
+		return -1;
 	}
 }
 
@@ -62,18 +98,31 @@ int main( void ) {
 	root->key = 10;	
 	
 	Node * nodeToInsert = getNode();
-	nodeToInsert->key = 10;
+	nodeToInsert->key = 9;
 	
 	Node * nodeToInsert2 = getNode();
 	nodeToInsert2->key = 20;
 	
-	insert(root, nodeToInsert);
-	insert(root, nodeToInsert2);
+	Node * nodeToInsert3 = getNode();
+	nodeToInsert3->key = 25;
 	
+	Node * nodeToInsert4 = getNode();
+	nodeToInsert4->key = 19;
+	
+	Node * nodeToInsert5 = getNode();
+	nodeToInsert5->key = 2;
+	
+	Node * nodeToInsert6 = getNode();
+	nodeToInsert6->key = 1;
+	
+	insertListaRecursivo(root, nodeToInsert);
+	insertListaRecursivo(root, nodeToInsert2);
+	insertListaRecursivo(root, nodeToInsert3);
+//	insertListaRecursivo(root, nodeToInsert4);
+//	insertListaRecursivo(root, nodeToInsert5);
+//	insertListaRecursivo(root, nodeToInsert6);
 
-	printf("o proximo valor sera zero %i", root->right->value);
-	
-	
-	
+
+	printf("menos cinco %i", root->bfactor);
 
 }
