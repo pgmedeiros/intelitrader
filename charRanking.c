@@ -9,6 +9,7 @@ struct node {
 	Node * left;
 	int key;
 	int value;
+	int bfactor;
 	
 };
 
@@ -18,6 +19,7 @@ Node * getNode() {
 	node->left = NULL;
 	node->right = NULL;
 	node->key = NULL;
+	node->bfactor = 0;
 }
 
 void insert(Node * root, Node * node) {
@@ -67,6 +69,7 @@ int main( void ) {
 	
 	insert(root, nodeToInsert);
 	insert(root, nodeToInsert2);
+	
 
 	printf("o proximo valor sera zero %i", root->right->value);
 	
