@@ -58,39 +58,6 @@ int insertListaRecursivo(Node * root, Node * node) {
 	
 }
 
-int insert(Node * root, Node * node) {
-	
-	Node * current = root;
-	Node * father;
-	
-	while(current != NULL) {
-		
-		if (node->key == current->key){
-			break;
-		}else if (node->key > current->key) {
-			father = current;
-			current = current->right;
-		} else {
-			father = current;
-			current = current->left;
-		}
-	}
-	
-	if(current != NULL) {
-		current->value++;
-		return 0;
-	}
-		
-	if (current == NULL && node->key > father->key) {
-		father->right = node;
-		return 1;
-	}
-	if (current == NULL && node->key < father->key) {
-		father->left = node;
-		return -1;
-	}
-}
-
 int main( void ) {
 	
 	Node * root = getNode();
