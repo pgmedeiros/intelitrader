@@ -48,6 +48,75 @@ int calculateHeight(Node * node) {
 	
 }
 
+Node * rotateLeft(Node * root, Node * pai, int direction) {
+	
+	Node * aux = NULL; 
+		Node * rightLeft = NULL;
+		
+		aux = root; 
+		
+		if (root->right->left != NULL) {
+			rightLeft = root->right->left;
+		}
+		
+		root = root->right;
+		
+		aux->right = rightLeft;
+		
+		root->left = aux;
+		
+		root->left->height = calculateHeight(root->left);
+		
+		root->height = calculateHeight(root);	
+		root->bfactor = calculateBFactor(root);
+		
+			
+		if (pai == NULL) {
+			return root;
+		}
+		
+		if (direction == 1) {
+			pai->right = root;
+		}		
+		if (direction == -1) {
+			pai->left = root;
+		} 
+		
+	return root;
+}
+
+Node * rotateRight(Node * root, Node * pai, int direction) {
+	Node * aux = NULL; 
+		Node * rootLeftRight = NULL;
+		
+		aux = root;
+		
+		if (root->left->right != NULL) {
+			rootLeftRight = root->left->right;
+		}
+		
+		root = root->left;
+		aux->left = rootLeftRight;
+		root->right = aux;
+		
+		root->right->height = calculateHeight(root->right);
+		root->height = calculateHeight(root);
+		root->bfactor = calculateBFactor(root);
+		
+		if (pai == NULL) {
+			return root;
+		}
+		
+		if (direction == 1) {
+			pai->right = root;
+		}		
+		if (direction == -1) {
+			pai->left = root;
+		} 
+		
+	return root;
+}
+
 int calculateBFactor(Node * node) {
 	return node->right->height - node->left->height;
 }
@@ -114,75 +183,13 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 		}
 	}
 		
-	if (root->bfactor <= -2) { // girar para a direita;
-		
-		
-		Node * aux = NULL; 
-		Node * rootLeftRight = NULL;
-		
-		aux = root;
-		
-		if (root->left->right != NULL) {
-			rootLeftRight = root->left->right;
-		}
-		
-		root = root->left;
-		aux->left = rootLeftRight;
-		root->right = aux;
-		
-		root->right->height = calculateHeight(root->right);
-		root->height = calculateHeight(root);
-		root->bfactor = calculateBFactor(root);
-		
-		if (pai == NULL) {
-			return root;
-		}
-		
-		if (direction == 1) {
-			pai->right = root;
-		}		
-		if (direction == -1) {
-			pai->left = root;
-		} 
-		
+	if (root->bfactor <= -2) { 
+		root = rotateRight(root, pai, direction);
 	}
 	
-	if (root->bfactor >= 2) { // girar pra esquerda
-		
-		Node * aux = NULL; 
-		Node * rightLeft = NULL;
-		
-		aux = root; 
-		
-		if (root->right->left != NULL) {
-			rightLeft = root->right->left;
-		}
-		
-		root = root->right;
-		
-		aux->right = rightLeft;
-		
-		root->left = aux;
-		
-		root->left->height = calculateHeight(root->left);
-		
-		root->height = calculateHeight(root);	
-		root->bfactor = calculateBFactor(root);
-		
-			
-		if (pai == NULL) {
-			return root;
-		}
-		
-		if (direction == 1) {
-			pai->right = root;
-		}		
-		if (direction == -1) {
-			pai->left = root;
-		} 
-		
+	if (root->bfactor >= 2) { 
+		root = rotateLeft(root, pai, direction);
 	} 
-	
 	
 	return root;
 }
