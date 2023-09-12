@@ -24,6 +24,34 @@ Node * getNode() {
 	node->height = 0;
 }
 
+int calculateHeight(Node * node) {
+	
+	if (node->right == NULL && node->left == NULL) {
+		return 0;
+	}
+	
+	if (node->right != NULL && node->left == NULL) {
+		return node->right + 1;
+	}
+	
+	if (node->right == NULL && node->left != NULL) {
+		return node->left + 1;
+	}
+	
+	if (node->right != NULL && node->left != NULL) {
+		if (node->right->height > node->left->height) {
+			return node->right->height + 1;
+		} else {
+			return node->left->height + 1;
+		}
+ 	}
+	
+}
+
+int calculateBFactor(Node * node) {
+	return node->right->height - node->left->height;
+}
+
 
 Node * inserir (Node * root, Node * pai, Node * node, int d) {
 	
@@ -83,6 +111,10 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 		root = root->left;
 		aux->left = rootLeftRight;
 		root->right = aux;
+		
+		root->right->height = calculateHeight(root->right);
+		root->height = calculateHeight(root);
+		root->bfactor = calculateBFactor(root);
 		
 		if (pai == NULL) {
 			return root;
