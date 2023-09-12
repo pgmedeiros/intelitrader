@@ -117,8 +117,17 @@ Node * rotateRight(Node * root, Node * pai, int direction) {
 	return root;
 }
 
-int calculateBFactor(Node * node) {
-	return node->right->height - node->left->height;
+int calculateBFactor(Node * root) {
+	
+	if (root->right == NULL) {
+		root->bfactor = -(root->left->height + 1);
+	} else if (root->left == NULL) {
+		root->bfactor = root->right->height + 1;
+	} else {
+		root->bfactor = (root->right->height) - (root->left->height);
+	}
+	
+	return root->bfactor;
 }
 
 
@@ -173,14 +182,7 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 	}
 		
 	if (root->left != NULL || root->right != NULL) {
-		
-		if (root->right == NULL) {
-			root->bfactor = -(root->left->height + 1);
-		} else if (root->left == NULL) {
-			root->bfactor = root->right->height + 1;
-		} else {
-			root->bfactor = (root->right->height) - (root->left->height);
-		}
+		root->bfactor = calculateBFactor(root);
 	}
 		
 	if (root->bfactor <= -2) { 
