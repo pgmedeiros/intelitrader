@@ -82,18 +82,36 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 		}
 	}
 	
-	if (root->left != NULL && root->right != NULL) {
+	if (root->left != NULL || root->right != NULL) {
 		
-		if ((root->right->height) > (root->left->height)) {
-			root->height = (root->right->height) + 1;
-		} else {
-			root->height = (root->left->height) + 1;
+		if (root->left == NULL && root->right != NULL) {
+			root->height = root->right->height + 1;
 		}
 		
+		if (root->left != NULL && root->right == NULL) {
+			root->height = root->left->height + 1;
+		}
+		
+		if (root->left != NULL && root->right != NULL) {
+			if ((root->right->height) > (root->left->height)) {
+				root->height = (root->right->height) + 1;
+			} else {
+			root->height = (root->left->height) + 1;
+			}
+		}
+		
+		
 	}
-	
-	if (root->left != NULL && root->right != NULL) {
-		root->bfactor = (root->right->height) - (root->left->height);
+		
+	if (root->left != NULL || root->right != NULL) {
+		
+		if (root->right == NULL) {
+			root->bfactor = -(root->left->height + 1);
+		} else if (root->left == NULL) {
+			root->bfactor = root->right->height + 1;
+		} else {
+			root->bfactor = (root->right->height) - (root->left->height);
+		}
 	}
 		
 	if (root->bfactor <= -2) { // girar para a direita;
@@ -154,13 +172,22 @@ int main( void ) {
 	nodeToInsert4->key = 16;
 	
 	Node * nodeToInsert5 = getNode();
-	nodeToInsert5->key = 2;
+	nodeToInsert5->key = 2; 
+	
+	Node * nodeToInsert6 = getNode();
+	nodeToInsert6->key = 1;
+	Node * nodeToInsert7 = getNode();
+	nodeToInsert7->key = -1;
 	
 	root = inserir(root, NULL, nodeToInsert, 0);
 	root = inserir(root, NULL, nodeToInsert2, 0);
 	root = inserir(root, NULL, nodeToInsert3, 0);
 	root = inserir(root, NULL, nodeToInsert4, 0);
 	root = inserir(root, NULL, nodeToInsert5, 0);
+	root = inserir(root, NULL, nodeToInsert6, 0); // erro 
+	root = inserir(root, NULL, nodeToInsert7, 0);
+
+
 
 	printf("menos cinco %i", root->key);
 	
