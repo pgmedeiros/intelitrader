@@ -147,9 +147,44 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 		
 	}
 	
+	if (root->bfactor >= 2) { // girar pra esquerda
+		
+		Node * aux = NULL; 
+		Node * rightLeft = NULL;
+		
+		aux = root; 
+		
+		if (root->right->left != NULL) {
+			rightLeft = root->right->left;
+		}
+		
+		root = root->right;
+		
+		aux->right = rightLeft;
+		
+		root->left = aux;
+		
+		root->left->height = calculateHeight(root->left);
+		
+		root->height = calculateHeight(root);	
+		root->bfactor = calculateBFactor(root);
+		
+			
+		if (pai == NULL) {
+			return root;
+		}
+		
+		if (direction == 1) {
+			pai->right = root;
+		}		
+		if (direction == -1) {
+			pai->left = root;
+		} 
+		
+	} 
+	
 	
 	return root;
-	
 }
 
 
@@ -176,20 +211,45 @@ int main( void ) {
 	
 	Node * nodeToInsert6 = getNode();
 	nodeToInsert6->key = 1;
+	
 	Node * nodeToInsert7 = getNode();
 	nodeToInsert7->key = -1;
+	
+	Node * nodeToInsert8 = getNode();
+	nodeToInsert8->key = -2;
+	
+	Node * nodeToInsert9 = getNode();
+	nodeToInsert9->key = 22;
+	
+	Node * nodeToInsert10 = getNode();
+	nodeToInsert10->key = 23;
 	
 	root = inserir(root, NULL, nodeToInsert, 0);
 	root = inserir(root, NULL, nodeToInsert2, 0);
 	root = inserir(root, NULL, nodeToInsert3, 0);
 	root = inserir(root, NULL, nodeToInsert4, 0);
 	root = inserir(root, NULL, nodeToInsert5, 0);
-	root = inserir(root, NULL, nodeToInsert6, 0); // erro 
+	root = inserir(root, NULL, nodeToInsert6, 0);
 	root = inserir(root, NULL, nodeToInsert7, 0);
+	root = inserir(root, NULL, nodeToInsert8, 0);
+	root = inserir(root, NULL, nodeToInsert9, 0);
+	root = inserir(root, NULL, nodeToInsert10, 0);	
 
 
+	printf("\nroot       %i", root->key == 15);
+		printf("\nroot left  %i", root->left->key == 2);
+			printf("\nroot left left  %i", root->left->left->key == -1);
+				printf("\nroot left left left %i", root->left->left->left->key == -2);
+				printf("\nroot left left right %i", root->left->left->right->key == 1);
+			printf("\nroot left right  %i", root->left->right->key == 14);
+		printf("\nroot right %i", root->right->key == 20);
+			printf("\nroot right left %i", root->right->left->key == 16);
+			printf("\nroot right right %i", root->right->right->key == 22);
+				printf("\nroot right right right %i", root->right->right->right->key == 23);
+				printf("\nroot right right left %i", root->right->right->left->key == 21);
 
-	printf("menos cinco %i", root->key);
+		
+
 	
 
 }
