@@ -31,11 +31,11 @@ int calculateHeight(Node * node) {
 	}
 	
 	if (node->right != NULL && node->left == NULL) {
-		return node->right + 1;
+		return node->right->height + 1;
 	}
 	
 	if (node->right == NULL && node->left != NULL) {
-		return node->left + 1;
+		return node->left->height + 1;
 	}
 	
 	if (node->right != NULL && node->left != NULL) {
@@ -86,7 +86,7 @@ Node * rotateLeft(Node * root, Node * pai, int direction) {
 }
 
 Node * rotateRight(Node * root, Node * pai, int direction) {
-	Node * aux = NULL; 
+		Node * aux = NULL; 
 		Node * rootLeftRight = NULL;
 		
 		aux = root;
@@ -161,27 +161,7 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 	}
 	
 	if (root->left != NULL || root->right != NULL) {
-		
-		if (root->left == NULL && root->right != NULL) {
-			root->height = root->right->height + 1;
-		}
-		
-		if (root->left != NULL && root->right == NULL) {
-			root->height = root->left->height + 1;
-		}
-		
-		if (root->left != NULL && root->right != NULL) {
-			if ((root->right->height) > (root->left->height)) {
-				root->height = (root->right->height) + 1;
-			} else {
-			root->height = (root->left->height) + 1;
-			}
-		}
-		
-		
-	}
-		
-	if (root->left != NULL || root->right != NULL) {
+		root->height = calculateHeight(root);
 		root->bfactor = calculateBFactor(root);
 	}
 		
