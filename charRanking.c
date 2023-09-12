@@ -10,6 +10,7 @@ struct node {
 	int key;
 	int value;
 	int bfactor;
+	int height;
 	
 };
 
@@ -20,68 +21,84 @@ Node * getNode() {
 	node->right = NULL;
 	node->key = NULL;
 	node->bfactor = 0; 
+	node->height = 0;
 }
 
-int insertListaRecursivo(Node * root, Node * node) {
+
+Node * inserir (Node * root, Node * pai, Node * node, int d) {
 	
-	int retorno;
+	Node * retorno;
+	int direction;
 	
-	if (node->key == root->key) {
-		root->value++;
-		return;
+	if (node->key > root->key && root->right != NULL) {
+		direction = 1;
+		retorno = inserir(root->right, root, node, direction);
+	}
+	
+	if (node->key < root->key && root->left != NULL) {
+		direction = -1;
+		retorno = inserir(root->left, root, node, direction);
 	}
 	
 	if (node->key > root->key && root->right == NULL) {
 		root->right = node;
-		root->bfactor += 1;
-		return root->bfactor;	
-		
+		if (root->left == NULL) {
+			root->height += 1;
+		}
 	}
+	
 	if (node->key < root->key && root->left == NULL) {
 		root->left = node;
-		root->bfactor += -1;
-		return root->bfactor;	
-	}
-		
-	if (node->key > root->key) {
-		retorno = insertListaRecursivo(root->right, node);
+		if (root->right == NULL) {
+			root->height += 1;
+		}
 	}
 	
-	if (node->key < root->key) {
-		retorno = insertListaRecursivo(root->left, node);
-	}
-	
-	root->bfactor += retorno;
-	
-	if (root->bfactor >= 2) {
-		printf("%i maior que dois", root->key);
-	}
+	if (root->left != NULL && root->right != NULL) {
 		
-	return retorno;
-}
-
-int inserir(Node ** root, Node * node) {
-	
-	int retorno = insertListaRecursivo(*root, node);
-	
-	if ((**root).bfactor <= -2) {
-		
-		Node * aux = NULL; 
-		Node * leftRight = NULL;
-		
-		aux = *root;
-		
-		if ((**root).left->right != NULL) {
-			leftRight = (**root).left->right;
+		if ((root->right->height) > (root->left->height)) {
+			root->height = (root->right->height) + 1;
+		} else {
+			root->height = (root->left->height) + 1;
 		}
 		
-		*root = (**root).left;
+	}
+	
+	if (root->left != NULL && root->right != NULL) {
+		root->bfactor = (root->right->height) - (root->left->height);
+	}
 		
-		(**root).right = aux;
+	if (root->bfactor <= -2) { // girar para a direita;
 		
-		(**root).right->left = leftRight;
+		
+		Node * aux = NULL; 
+		Node * rootLeftRight = NULL;
+		
+		aux = root;
+		
+		if (root->left->right != NULL) {
+			rootLeftRight = root->left->right;
+		}
+		
+		root = root->left;
+		aux->left = rootLeftRight;
+		root->right = aux;
+		
+		if (pai == NULL) {
+			return root;
+		}
+		
+		if (direction == 1) {
+			pai->right = root;
+		}		
+		if (direction == -1) {
+			pai->left = root;
+		} 
 		
 	}
+	
+	
+	return root;
 	
 }
 
@@ -107,11 +124,11 @@ int main( void ) {
 	Node * nodeToInsert5 = getNode();
 	nodeToInsert5->key = 2;
 	
-	inserir(&root, nodeToInsert);
-	inserir(&root, nodeToInsert2);
-	inserir(&root, nodeToInsert3);
-	inserir(&root, nodeToInsert4);
-	inserir(&root, nodeToInsert5);
+	root = inserir(root, NULL, nodeToInsert, 0);
+	root = inserir(root, NULL, nodeToInsert2, 0);
+	root = inserir(root, NULL, nodeToInsert3, 0);
+	root = inserir(root, NULL, nodeToInsert4, 0);
+	root = inserir(root, NULL, nodeToInsert5, 0);
 
 	printf("menos cinco %i", root->key);
 	
