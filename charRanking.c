@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define DEBUG 0
 
 
 typedef struct node Node;
@@ -14,7 +15,8 @@ struct node {
 	
 };
 
-int size = 0;
+int size = 1;
+int v_size = 0;
 
 Node * getNode() {
 	Node * node = (Node *) malloc(sizeof(Node));
@@ -198,6 +200,21 @@ Node * insertOrUpdate (Node * root, Node * pai, Node * node, int d) {
 }
 
 
+void binaryTreeToArray(Node * root, Node * vector) {
+
+	if (root->left != NULL) {
+		binaryTreeToArray(root->left, vector);
+	}
+	
+	vector[v_size] = *root;	
+	v_size++;
+	
+	if (root->right != NULL) {
+		binaryTreeToArray(root->right, vector);
+	}
+	
+	return;
+}
 
 
 int main( void ) {
@@ -244,11 +261,12 @@ int main( void ) {
 	root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
 	root = insertOrUpdate(root, NULL, nodeToInsert7, 0);
 	root = insertOrUpdate(root, NULL, nodeToInsert8, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert8, 0);
 	root = insertOrUpdate(root, NULL, nodeToInsert9, 0);
 	root = insertOrUpdate(root, NULL, nodeToInsert10, 0);
 	
-	printf("||||||||||||||||||||||||||||||");
+	if(DEBUG) {
+		
+		printf("||||||||||||||||||||||||||||||");
 
 	printf("\na root %i, valor: %i", root->key == 15, root->key);
 		printf("\nbroot %i, valor: %i", root->left->key == 2, root->left->key);
@@ -261,11 +279,16 @@ int main( void ) {
 			printf("\niroot %i, valor: %i", root->right->right->key == 22, root->right->right->key);
 				printf("\njroot %i, valor: %i", root->right->right->right->key == 23, root->right->right->right->key);
 				printf("\nkroot %i, valor: %i", root->right->right->left->key == 21, root->right->right->left->key);
-
+	
+	}
+	
 		
 	printf("\n \n |||||||||||||||||||||");
 	
-	Node * root2 = getNode();
+	
+
+	if (DEBUG) {
+		Node * root2 = getNode();
 	root2->key = 67;
 	
 	Node * _2nodeToInsert = getNode();
@@ -288,9 +311,7 @@ int main( void ) {
 	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert3, 0);
 	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert4, 0);
 	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert5, 0);
-
-	
-	printf("\nroot %i, valor: %i", root2->key == 60, root2->key);
+		printf("\nroot %i, valor: %i", root2->key == 60, root2->key);
 		printf("\nroot %i, valor: %i", root2->right->key == 67, root2->right->key);
 			printf("\nroot %i, valor: %i", root2->right->right->key == 90, root2->right->right->key);
 		printf("\nroot %i, valor: %i", root2->left->key == 54, root2->left->key);
@@ -299,42 +320,51 @@ int main( void ) {
 
 
 	printf("\n \n |||||||||||||||||||||");
+		
+	}
 	
-	
-	Node * root3 = getNode();
-	root3->key = 60;
-	
-	Node * _3nodeToInsert = getNode();
-	_3nodeToInsert->key = 35;
-	
-	Node * _3nodeToInsert2 = getNode();
-	_3nodeToInsert2->key = 83;
-	
-	Node * _3nodeToInsert3 = getNode();
-	_3nodeToInsert3->key = 71;
-	
-	Node * _3nodeToInsert4 = getNode();
-	_3nodeToInsert4->key = 97;
-	
-	Node * _3nodeToInsert5 = getNode();
-	_3nodeToInsert5->key = 65;
-	
-	root3 = insertOrUpdate(root3, NULL, _3nodeToInsert, 0);
-	root3 = insertOrUpdate(root3, NULL, _3nodeToInsert2, 0);
-	root3 = insertOrUpdate(root3, NULL, _3nodeToInsert3, 0);
-	root3 = insertOrUpdate(root3, NULL, _3nodeToInsert4, 0);
-	root3 = insertOrUpdate(root3, NULL, _3nodeToInsert5, 0);
-
-	
-	printf("\nroot %i, valor: %i", root3->key == 71, root3->key);
+	if (DEBUG) {
+		
+		Node * root3 = getNode();
+		root3->key = 60;
+		
+		Node * _3nodeToInsert = getNode();
+		_3nodeToInsert->key = 35;
+		
+		Node * _3nodeToInsert2 = getNode();
+		_3nodeToInsert2->key = 83;
+		
+		Node * _3nodeToInsert3 = getNode();
+		_3nodeToInsert3->key = 71;
+		
+		Node * _3nodeToInsert4 = getNode();
+		_3nodeToInsert4->key = 97;
+		
+		Node * _3nodeToInsert5 = getNode();
+		_3nodeToInsert5->key = 65;
+		
+		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert, 0);
+		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert2, 0);
+		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert3, 0);
+		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert4, 0);
+		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert5, 0);
+		printf("\nroot %i, valor: %i", root3->key == 71, root3->key);
 		printf("\nroot %i, valor: %i", root3->right->key == 83, root3->right->key);
 			printf("\nroot %i, valor: %i", root3->right->right->key == 97, root3->right->right->key);
 		printf("\nroot %i, valor: %i", root3->left->key == 60, root3->left->key);
 			printf("\nroot %i, valor: %i", root3->left->left->key == 35, root3->left->left->key);
 			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
-	
+		
+	}
 
 	
+	Node * vector = (Node *) malloc(size * sizeof(Node));
+	
+	binaryTreeToArray(root, vector);
+	
+	for (int i = 0; i < size; i++) {
+		printf("%i ", vector[i].key);
+	}
 
 	return 0;
 	
