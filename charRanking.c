@@ -165,13 +165,26 @@ Node * inserir (Node * root, Node * pai, Node * node, int d) {
 		root->bfactor = calculateBFactor(root);
 	}
 		
-	if (root->bfactor <= -2) { 
+	if (root->bfactor <= -2 && root->left->bfactor <= -1) { 
 		root = rotateRight(root, pai, direction);
 	}
 	
-	if (root->bfactor >= 2) { 
+	if (root->bfactor >= 2 && root->right->bfactor >= 1) { 
 		root = rotateLeft(root, pai, direction);
 	} 
+	
+	if (root->left != NULL && root->right != NULL) {
+			
+		if (root->bfactor >= 2 && root->right->bfactor <= -1) {
+			rotateRight(root->right, root, direction); 
+			root = rotateLeft(root, pai, direction);
+		}
+		
+		if (root->bfactor <= -2 && root->left->bfactor >= 1) {
+			rotateLeft(root->left, root, direction); 
+			root = rotateRight(root, pai, direction);
+		}
+	}
 	
 	return root;
 }
@@ -222,23 +235,98 @@ int main( void ) {
 	root = inserir(root, NULL, nodeToInsert7, 0);
 	root = inserir(root, NULL, nodeToInsert8, 0);
 	root = inserir(root, NULL, nodeToInsert9, 0);
-	root = inserir(root, NULL, nodeToInsert10, 0);	
+	root = inserir(root, NULL, nodeToInsert10, 0);
+	
+	printf("||||||||||||||||||||||||||||||");
 
 
-	printf("\nroot       %i", root->key == 15);
-		printf("\nroot left  %i", root->left->key == 2);
-			printf("\nroot left left  %i", root->left->left->key == -1);
-				printf("\nroot left left left %i", root->left->left->left->key == -2);
-				printf("\nroot left left right %i", root->left->left->right->key == 1);
-			printf("\nroot left right  %i", root->left->right->key == 14);
-		printf("\nroot right %i", root->right->key == 20);
-			printf("\nroot right left %i", root->right->left->key == 16);
-			printf("\nroot right right %i", root->right->right->key == 22);
-				printf("\nroot right right right %i", root->right->right->right->key == 23);
-				printf("\nroot right right left %i", root->right->right->left->key == 21);
+	printf("\na root %i, valor: %i", root->key == 15, root->key);
+		printf("\nbroot %i, valor: %i", root->left->key == 2, root->left->key);
+			printf("\ncroot %i, valor: %i", root->left->left->key == -1, root->left->left->key);
+				printf("\ndroot %i, valor: %i", root->left->left->left->key == -2, root->left->left->left->key);
+				printf("\neroot %i, valor: %i", root->left->left->right->key == 1, root->left->left->right->key);
+			printf("\nfroot %i, valor: %i", root->left->right->key == 14, root->left->right->key);
+		printf("\ngroot %i, valor: %i", root->right->key == 20, root->right->key);
+			printf("\nhroot %i, valor: %i", root->right->left->key == 16, root->right->left->key);
+			printf("\niroot %i, valor: %i", root->right->right->key == 22, root->right->right->key);
+				printf("\njroot %i, valor: %i", root->right->right->right->key == 23, root->right->right->right->key);
+				printf("\nkroot %i, valor: %i", root->right->right->left->key == 21, root->right->right->left->key);
 
 		
+	printf("\n \n |||||||||||||||||||||");
+	
+	Node * root2 = getNode();
+	root2->key = 67;
+	
+	Node * _2nodeToInsert = getNode();
+	_2nodeToInsert->key = 54;
+	
+	Node * _2nodeToInsert2 = getNode();
+	_2nodeToInsert2->key = 90;
+	
+	Node * _2nodeToInsert3 = getNode();
+	_2nodeToInsert3->key = 29;
+	
+	Node * _2nodeToInsert4 = getNode();
+	_2nodeToInsert4->key = 60;
+	
+	Node * _2nodeToInsert5 = getNode();
+	_2nodeToInsert5->key = 58;
+	
+	root2 = inserir(root2, NULL, _2nodeToInsert, 0);
+	root2 = inserir(root2, NULL, _2nodeToInsert2, 0);
+	root2 = inserir(root2, NULL, _2nodeToInsert3, 0);
+	root2 = inserir(root2, NULL, _2nodeToInsert4, 0);
+	root2 = inserir(root2, NULL, _2nodeToInsert5, 0);
 
+	
+	printf("\nroot %i, valor: %i", root2->key == 60, root2->key);
+		printf("\nroot %i, valor: %i", root2->right->key == 67, root2->right->key);
+			printf("\nroot %i, valor: %i", root2->right->right->key == 90, root2->right->right->key);
+		printf("\nroot %i, valor: %i", root2->left->key == 54, root2->left->key);
+			printf("\nroot %i, valor: %i", root2->left->left->key == 29, root2->left->left->key);
+			printf("\nroot %i, valor: %i", root2->left->right->key == 58, root2->left->right->key);
+
+
+	printf("\n \n |||||||||||||||||||||");
+	
+	
+	Node * root3 = getNode();
+	root3->key = 60;
+	
+	Node * _3nodeToInsert = getNode();
+	_3nodeToInsert->key = 35;
+	
+	Node * _3nodeToInsert2 = getNode();
+	_3nodeToInsert2->key = 83;
+	
+	Node * _3nodeToInsert3 = getNode();
+	_3nodeToInsert3->key = 71;
+	
+	Node * _3nodeToInsert4 = getNode();
+	_3nodeToInsert4->key = 97;
+	
+	Node * _3nodeToInsert5 = getNode();
+	_3nodeToInsert5->key = 65;
+	
+	root3 = inserir(root3, NULL, _3nodeToInsert, 0);
+	root3 = inserir(root3, NULL, _3nodeToInsert2, 0);
+	root3 = inserir(root3, NULL, _3nodeToInsert3, 0);
+	root3 = inserir(root3, NULL, _3nodeToInsert4, 0);
+	root3 = inserir(root3, NULL, _3nodeToInsert5, 0);
+
+	
+	printf("\nroot %i, valor: %i", root3->key == 71, root3->key);
+		printf("\nroot %i, valor: %i", root3->right->key == 83, root3->right->key);
+			printf("\nroot %i, valor: %i", root3->right->right->key == 97, root3->right->right->key);
+		printf("\nroot %i, valor: %i", root3->left->key == 60, root3->left->key);
+			printf("\nroot %i, valor: %i", root3->left->left->key == 35, root3->left->left->key);
+			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
+	
+
+	
+
+	return 0;
 	
 
 }
