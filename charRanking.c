@@ -254,6 +254,15 @@ void heapify(Node * vector, int m) {
 	}
 }
 
+void getMax(Node * vector, int m, Node * ptrNode) {
+	
+	*ptrNode = vector[0];
+	vector[0] = vector[m - 1];
+	downHeap(vector, m, 0);
+	v_size--;
+	
+}
+
 
 int main( void ) {
 	
@@ -446,23 +455,27 @@ int main( void ) {
 		
 	}
 	
-	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
 	binaryTreeToArray(root, vector);
 	
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < v_size; i++) {
 		printf("%i ", vector[i].key);
 	}
 	
 	printf("\n");
 	
-	heapify(vector, 7);
+	heapify(vector, v_size);
 	
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < v_size; i++) {
 		printf("%i ", vector[i].key);
 	}
-
+	
+	Node * ptr;
+	
+	getMax(vector, v_size, ptr);
+	
+	printf("\n %i", ptr->value);
 	return 0;
 	
 
