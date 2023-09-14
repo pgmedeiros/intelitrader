@@ -466,6 +466,7 @@ int main( void ) {
 			if (root == NULL) {
 				root = getNode();
 				root->key = c;
+				c = fgetc(toRead);
 				continue;
 			}
 			
