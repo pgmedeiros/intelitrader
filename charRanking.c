@@ -4,6 +4,7 @@
 #define SON_RIGHT(i) (2 * i + 2)
 #define FATHER(i) ((i - 1) / 2)
 #define TESTA_HEAPFY 0
+#define TESTA_ARQUIVO_FINAL 1
 
 typedef struct node Node;
 
@@ -250,7 +251,7 @@ void downHeap(Node * vector, int size, int i) {
 
 void heapify(Node * vector, int m) {
 	for (int i = m/2; i>=0; i--) {
-		downHeap(vector, m, i);
+		downHeap(vector, m - 1, i);
 	}
 }
 
@@ -258,7 +259,7 @@ void getMax(Node * vector, int m, Node * ptrNode) {
 	
 	*ptrNode = vector[0];
 	vector[0] = vector[m - 1];
-	downHeap(vector, m, 0);
+	downHeap(vector, m - 1, 0);
 	v_size--;
 	
 }
@@ -405,11 +406,11 @@ int main( void ) {
 			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
 		
 	}
+
+	Node * root = NULL;
 		
 	if(TESTA_HEAPFY) {
-		
-		Node * root;
-		
+				
 		root = getNode();
 		root->value = 20;
 		root->key = 20;	
@@ -454,34 +455,36 @@ int main( void ) {
 		
 	}
 	
-	Node * root = NULL;
-
+	if (TESTA_ARQUIVO_FINAL) {
+				
+		FILE *toRead = fopen("toReadChar.txt", "r");
 	
-	FILE *toRead = fopen("toReadChar.txt", "r");
-
-	int c = fgetc(toRead);
-	
-	while (!feof(toRead)) {
+		int c = fgetc(toRead);
 		
-		if (root == NULL) {
-			root = getNode();
-			root->key = c;
-			continue;
+		while (!feof(toRead)) {
+			
+			if (root == NULL) {
+				root = getNode();
+				root->key = c;
+				continue;
+			}
+			
+			Node * node = getNode();
+			node->key = c;
+			
+			root = insertOrUpdate(root, NULL, node, 0);
+			
+			c = fgetc(toRead);
+			
 		}
 		
-		Node * node = getNode();
-		node->key = c;
-		
-		root = insertOrUpdate(root, NULL, node, 0);
-		
-		c = fgetc(toRead);
-			
 	}
+	
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
 	binaryTreeToArray(root, vector);
-	
+
 	heapify(vector, v_size);
 	
 	Node * ptr = (Node *)malloc(sizeof(Node));
