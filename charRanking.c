@@ -1,11 +1,7 @@
 #include <stdio.h>
-#define DEBUG 0
 #define SON_LEFT(i) (2 * i + 1)
 #define SON_RIGHT(i) (2 * i + 2)
 #define FATHER(i) ((i - 1) / 2)
-#define TESTA_HEAPFY 0
-#define TESTA_ARQUIVO_FINAL 1
-#define TESTA_ARVORE 0
 #define RIGHT 1
 #define LEFT -1
 
@@ -242,10 +238,6 @@ void downHeap(Node * vector, int size, int i) {
 		} 
 		
 	}
-		
-
-		
-	
 }
 
 void heapify(Node * vector, int m) {
@@ -263,282 +255,66 @@ void getMax(Node * vector, int m, Node * ptrNode) {
 	
 }
 
-
 int main( void ) {
-	
-	
-	
-	if(TESTA_ARVORE) {
-		
-		Node * root = getNode();
-		root->value = 1;
-		root->key = 20;	
-		
-		Node * nodeToInsert = getNode();
-		nodeToInsert->key = 15;
-		
-		Node * nodeToInsert2 = getNode();
-		nodeToInsert2->key = 21;
-		
-		Node * nodeToInsert3 = getNode();
-		nodeToInsert3->key = 14;
-		
-		Node * nodeToInsert4 = getNode();
-		nodeToInsert4->key = 16;
-		
-		Node * nodeToInsert5 = getNode();
-		nodeToInsert5->key = 2; 
-		
-		Node * nodeToInsert6 = getNode();
-		nodeToInsert6->key = 1;
-		
-		Node * nodeToInsert7 = getNode();
-		nodeToInsert7->key = -1;
-		
-		Node * nodeToInsert8 = getNode();
-		nodeToInsert8->key = -2;
-		
-		Node * nodeToInsert9 = getNode();
-		nodeToInsert9->key = 22;
-		
-		Node * nodeToInsert10 = getNode();
-		nodeToInsert10->key = 23;
-		
-		root = insertOrUpdate(root, NULL, nodeToInsert, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert2, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert3, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert4, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert5, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert7, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert8, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert9, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert10, 0);
-		
-	
-		printf("\naroot %i, valor: %i", root->key == 15, root->key);
-			printf("\nbroot %i, valor: %i", root->left->key == 2, root->left->key);
-				printf("\ncroot %i, valor: %i", root->left->left->key == -1, root->left->left->key);
-					printf("\ndroot %i, valor: %i", root->left->left->left->key == -2, root->left->left->left->key);
-					printf("\neroot %i, valor: %i", root->left->left->right->key == 1, root->left->left->right->key);
-				printf("\nfroot %i, valor: %i", root->left->right->key == 14, root->left->right->key);
-			printf("\ngroot %i, valor: %i", root->right->key == 20, root->right->key);
-				printf("\nhroot %i, valor: %i", root->right->left->key == 16, root->right->left->key);
-				printf("\niroot %i, valor: %i", root->right->right->key == 22, root->right->right->key);
-					printf("\njroot %i, valor: %i", root->right->right->right->key == 23, root->right->right->right->key);
-					printf("\nkroot %i, valor: %i", root->right->right->left->key == 21, root->right->right->left->key);
-					
-					
-		
-		Node * root2 = getNode();
-		root2->value = 106;
-		root2->key = 106;	
-		
-		Node * _nodeToInsert = getNode();
-		_nodeToInsert->key = 97;
-		_nodeToInsert->value = 97;
-
-		
-		Node * _nodeToInsert2 = getNode();
-		_nodeToInsert2->key = 111;
-		_nodeToInsert2->value = 111;
-		
-		Node * _nodeToInsert3 = getNode();
-		_nodeToInsert3->key = 114;
-		_nodeToInsert3->value = 114;
-
-		
-		Node * _nodeToInsert4 = getNode();
-		_nodeToInsert4->key = 103;
-		_nodeToInsert4->value = 103;
-
-		
-		Node * _nodeToInsert5 = getNode();
-		_nodeToInsert5->key = 99; 
-		_nodeToInsert5->value = 99; 
-
-		printf("\nTESTE 2");
-
-	
-		root2 = insertOrUpdate(root2, NULL, _nodeToInsert, 0);
-		root2 = insertOrUpdate(root2, NULL, _nodeToInsert2, 0);
-		root2 = insertOrUpdate(root2, NULL, _nodeToInsert3, 0);
-		root2 = insertOrUpdate(root2, NULL, _nodeToInsert4, 0);
-		root2 = insertOrUpdate(root2, NULL, _nodeToInsert5, 0);
-		
-		
-		printf("\nroot %i, valor: %i", root2->key == 106, root2->key);
-			printf("\nroot %i, valor: %i", root2->right->key == 111, root2->right->key);
-				printf("\nroot %i, valor: %i", root2->right->right->key == 114, root2->right->right->key);
-			printf("\nroot %i, valor: %i", root2->left->key == 99, root2->left->key);
-				printf("\nroot %i, valor: %i", root2->left->left->key == 97, root2->left->left->key);
-				printf("\nroot %i, valor: %i", root2->left->right->key == 103, root2->left->right->key);
-	
-	}
-		
-
-	if (DEBUG) {
-		Node * root2 = getNode();
-	root2->key = 67;
-	
-	Node * _2nodeToInsert = getNode();
-	_2nodeToInsert->key = 54;
-	
-	Node * _2nodeToInsert2 = getNode();
-	_2nodeToInsert2->key = 90;
-	
-	Node * _2nodeToInsert3 = getNode();
-	_2nodeToInsert3->key = 29;
-	
-	Node * _2nodeToInsert4 = getNode();
-	_2nodeToInsert4->key = 60;
-	
-	Node * _2nodeToInsert5 = getNode();
-	_2nodeToInsert5->key = 58;
-	
-	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert, 0);
-	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert2, 0);
-	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert3, 0);
-	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert4, 0);
-	root2 = insertOrUpdate(root2, NULL, _2nodeToInsert5, 0);
-		printf("\nroot %i, valor: %i", root2->key == 60, root2->key);
-		printf("\nroot %i, valor: %i", root2->right->key == 67, root2->right->key);
-			printf("\nroot %i, valor: %i", root2->right->right->key == 90, root2->right->right->key);
-		printf("\nroot %i, valor: %i", root2->left->key == 54, root2->left->key);
-			printf("\nroot %i, valor: %i", root2->left->left->key == 29, root2->left->left->key);
-			printf("\nroot %i, valor: %i", root2->left->right->key == 58, root2->left->right->key);
-
-
-	printf("\n \n |||||||||||||||||||||");
-		
-	}
-	
-	if (DEBUG) {
-		
-		Node * root3 = getNode();
-		root3->key = 60;
-		
-		Node * _3nodeToInsert = getNode();
-		_3nodeToInsert->key = 35;
-		
-		Node * _3nodeToInsert2 = getNode();
-		_3nodeToInsert2->key = 83;
-		
-		Node * _3nodeToInsert3 = getNode();
-		_3nodeToInsert3->key = 71;
-		
-		Node * _3nodeToInsert4 = getNode();
-		_3nodeToInsert4->key = 97;
-		
-		Node * _3nodeToInsert5 = getNode();
-		_3nodeToInsert5->key = 65;
-		
-		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert, 0);
-		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert2, 0);
-		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert3, 0);
-		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert4, 0);
-		root3 = insertOrUpdate(root3, NULL, _3nodeToInsert5, 0);
-		printf("\nroot %i, valor: %i", root3->key == 71, root3->key);
-		printf("\nroot %i, valor: %i", root3->right->key == 83, root3->right->key);
-			printf("\nroot %i, valor: %i", root3->right->right->key == 97, root3->right->right->key);
-		printf("\nroot %i, valor: %i", root3->left->key == 60, root3->left->key);
-			printf("\nroot %i, valor: %i", root3->left->left->key == 35, root3->left->left->key);
-			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
-		
-	}
 
 	Node * root = NULL;
-		
-	if(TESTA_HEAPFY) {
-				
-		root = getNode();
-		root->value = 20;
-		root->key = 20;	
-		
-		Node * nodeToInsert = getNode();
-		nodeToInsert->key = 15;
-		nodeToInsert->value = 15;
-
-		
-		Node * nodeToInsert2 = getNode();
-		nodeToInsert2->key = 21;
-		nodeToInsert2->value = 21;
-
-		
-		Node * nodeToInsert3 = getNode();
-		nodeToInsert3->key = 14;
-		nodeToInsert3->value = 14;
-
-		
-		Node * nodeToInsert4 = getNode();
-		nodeToInsert4->key = 16;
-		nodeToInsert4->value = 16;
-
-		
-		Node * nodeToInsert5 = getNode();
-		nodeToInsert5->key = 2; 
-		nodeToInsert5->value = 2;
-
-		
-		Node * nodeToInsert6 = getNode();
-		nodeToInsert6->key = 1;
-		nodeToInsert6->value = 1;
-
-
-		root = insertOrUpdate(root, NULL, nodeToInsert, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert2, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert3, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert4, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert5, 0);
-		root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
-		
-		
-	}
-	
-	if (TESTA_ARQUIVO_FINAL) {
-				
-		FILE *toRead = fopen("toReadChar.txt", "r");
-	
-		int c = fgetc(toRead);
-		
-		while (!feof(toRead)) {
-			
-			if (root == NULL) {
-				root = getNode();
-				root->key = c;
-				c = fgetc(toRead);
-				continue;
-			}
-			
-			Node * node = getNode();
-			node->key = c;
-			
-			root = insertOrUpdate(root, NULL, node, 0);
-			
-			c = fgetc(toRead);
-			
-		}
-		
-	}
-	
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
+	char toReadFile[100];
+	
+	char toWriteFile[100];
+	
+	int differentChar;
+	
+	printf("Escreva o caminho do arquivo para ser lido: ");
+	scanf("%s", &toReadFile);
+	
+	printf("Escreva o caminho do arquivo para ser escrito: ");
+	scanf("%s", &toWriteFile);
+		
+	FILE *toRead = fopen(toReadFile, "r");
+	
+	FILE *toWrite = fopen(toWriteFile, "w");
+	
+	if (toRead == NULL || toWrite == NULL) {
+		printf("Erro ao abrir o(s) arquivo(s)");
+		exit(1);
+	}
+
+	int c = fgetc(toRead);
+	
+	while (!feof(toRead)) {
+		
+		if (root == NULL) {
+			root = getNode();
+			root->key = c;
+			c = fgetc(toRead);
+			continue;
+		}
+		
+		Node * node = getNode();
+		node->key = c;
+		
+		root = insertOrUpdate(root, NULL, node, 0);
+		
+		c = fgetc(toRead);
+		
+	}
+		
 	binaryTreeToArray(root, vector);
 
 	heapify(vector, v_size);
 	
-	int teste = v_size;
+	differentChar = v_size;
 	
-	Node * ptr = (Node *)malloc(sizeof(Node));
+	Node * ptr = (Node *) malloc(sizeof(Node));
 	
-	
-	for (int i = 0; i < teste; i++) {	
+	for (int i = 0; i < differentChar; i++) {	
 		getMax(vector, v_size, ptr);
-		printf("\n%c %i", ptr->key, ptr->value);
+		fprintf(toWrite,"%c %i\n", ptr->key, ptr->value);
 	}
 
 	return 0;
 	
-
 }
