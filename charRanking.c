@@ -4,7 +4,10 @@
 #define SON_RIGHT(i) (2 * i + 2)
 #define FATHER(i) ((i - 1) / 2)
 #define TESTA_HEAPFY 0
-#define TESTA_ARQUIVO_FINAL 1
+#define TESTA_ARQUIVO_FINAL 0
+#define TESTA_ARVORE 1
+#define RIGHT 1
+#define LEFT -1
 
 typedef struct node Node;
 
@@ -59,68 +62,69 @@ int calculateHeight(Node * node) {
 Node * rotateLeft(Node * root, Node * pai, int direction) {
 	
 	Node * aux = NULL; 
-		Node * rightLeft = NULL;
+	Node * rightLeft = NULL;
+	
+	aux = root; 
+	
+	if (root->right->left != NULL) {
+		rightLeft = root->right->left;
+	}
+	
+	root = root->right;
+	
+	aux->right = rightLeft;
+	
+	root->left = aux;
+	
+	root->left->height = calculateHeight(root->left);
+	
+	root->height = calculateHeight(root);	
+	root->bfactor = calculateBFactor(root);
+	
 		
-		aux = root; 
-		
-		if (root->right->left != NULL) {
-			rightLeft = root->right->left;
-		}
-		
-		root = root->right;
-		
-		aux->right = rightLeft;
-		
-		root->left = aux;
-		
-		root->left->height = calculateHeight(root->left);
-		
-		root->height = calculateHeight(root);	
-		root->bfactor = calculateBFactor(root);
-		
-			
-		if (pai == NULL) {
-			return root;
-		}
-		
-		if (direction == 1) {
-			pai->right = root;
-		}		
-		if (direction == -1) {
-			pai->left = root;
-		} 
+	if (pai == NULL) {
+		return root;
+	}
+	
+	if (direction == RIGHT) {
+		pai->right = root;
+	}		
+	if (direction == LEFT) {
+		pai->left = root;
+	} 
 		
 	return root;
 }
 
 Node * rotateRight(Node * root, Node * pai, int direction) {
-		Node * aux = NULL; 
-		Node * rootLeftRight = NULL;
-		
-		aux = root;
-		
-		if (root->left->right != NULL) {
-			rootLeftRight = root->left->right;
-		}
-		
-		root = root->left;
-		aux->left = rootLeftRight;
-		root->right = aux;
-		
-		root->right->height = calculateHeight(root->right);
-		root->height = calculateHeight(root);
-		root->bfactor = calculateBFactor(root);
-		
-		if (pai == NULL) {
-			return root;
-		}
-		
-		if (direction == 1) {
-			pai->right = root;
-		}		
-		if (direction == -1) {
-			pai->left = root;
-		} 
+	Node * aux = NULL; 
+	Node * rootLeftRight = NULL;
+	
+	aux = root;
+	
+	if (root->left->right != NULL) {
+		rootLeftRight = root->left->right;
+	}
+	
+	root = root->left;
+	aux->left = rootLeftRight;
+	root->right = aux;
+	
+	root->right->height = calculateHeight(root->right);
+	root->height = calculateHeight(root);
+	root->bfactor = calculateBFactor(root);
+	
+	if (pai == NULL) {
+		return root;
+	}
+	
+	if (direction == RIGHT) {
+		pai->right = root;
+	}
+			
+	if (direction == LEFT) {
+		pai->left = root;
+	} 
 		
 	return root;
 }
@@ -139,23 +143,20 @@ int calculateBFactor(Node * root) {
 }
 
 
-Node * insertOrUpdate (Node * root, Node * pai, Node * node, int d) {
+Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction) {
 	
 	Node * retorno;
-	int direction;
 	
 	if (node->key == root->key) {
 		root->value++;
 	}
 	
 	if (node->key > root->key && root->right != NULL) {
-		direction = 1;
-		retorno = insertOrUpdate(root->right, root, node, direction);
+		retorno = insertOrUpdate(root->right, root, node, RIGHT);
 	}
 	
 	if (node->key < root->key && root->left != NULL) {
-		direction = -1;
-		retorno = insertOrUpdate(root->left, root, node, direction);
+		retorno = insertOrUpdate(root->left, root, node, LEFT);
 	}
 	
 	if (node->key > root->key && root->right == NULL) {
@@ -186,19 +187,17 @@ Node * insertOrUpdate (Node * root, Node * pai, Node * node, int d) {
 	if (root->bfactor >= 2 && root->right->bfactor >= 1) { 
 		root = rotateLeft(root, pai, direction);
 	} 
-	
-	if (root->left != NULL && root->right != NULL) {
-			
-		if (root->bfactor >= 2 && root->right->bfactor <= -1) {
-			rotateRight(root->right, root, direction); 
-			root = rotateLeft(root, pai, direction);
-		}
 		
-		if (root->bfactor <= -2 && root->left->bfactor >= 1) {
-			rotateLeft(root->left, root, direction); 
-			root = rotateRight(root, pai, direction);
-		}
+	if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor <= -1) {
+		rotateRight(root->right, root, RIGHT); 
+		root = rotateLeft(root, pai, direction);
 	}
+	
+	if (root->left != NULL && root->bfactor <= -2 && root->left->bfactor >= 1) {
+		rotateLeft(root->left, root, LEFT); 
+		root = rotateRight(root, pai, direction);
+	}
+
 	
 	return root;
 }
@@ -269,7 +268,7 @@ int main( void ) {
 	
 	
 	
-	if(DEBUG) {
+	if(TESTA_ARVORE) {
 		
 		Node * root = getNode();
 		root->value = 1;
@@ -316,26 +315,67 @@ int main( void ) {
 		root = insertOrUpdate(root, NULL, nodeToInsert9, 0);
 		root = insertOrUpdate(root, NULL, nodeToInsert10, 0);
 		
-		printf("||||||||||||||||||||||||||||||");
+	
+		printf("\naroot %i, valor: %i", root->key == 15, root->key);
+			printf("\nbroot %i, valor: %i", root->left->key == 2, root->left->key);
+				printf("\ncroot %i, valor: %i", root->left->left->key == -1, root->left->left->key);
+					printf("\ndroot %i, valor: %i", root->left->left->left->key == -2, root->left->left->left->key);
+					printf("\neroot %i, valor: %i", root->left->left->right->key == 1, root->left->left->right->key);
+				printf("\nfroot %i, valor: %i", root->left->right->key == 14, root->left->right->key);
+			printf("\ngroot %i, valor: %i", root->right->key == 20, root->right->key);
+				printf("\nhroot %i, valor: %i", root->right->left->key == 16, root->right->left->key);
+				printf("\niroot %i, valor: %i", root->right->right->key == 22, root->right->right->key);
+					printf("\njroot %i, valor: %i", root->right->right->right->key == 23, root->right->right->right->key);
+					printf("\nkroot %i, valor: %i", root->right->right->left->key == 21, root->right->right->left->key);
+					
+					
+		
+		Node * root2 = getNode();
+		root2->value = 106;
+		root2->key = 106;	
+		
+		Node * _nodeToInsert = getNode();
+		_nodeToInsert->key = 97;
+		_nodeToInsert->value = 97;
 
-	printf("\na root %i, valor: %i", root->key == 15, root->key);
-		printf("\nbroot %i, valor: %i", root->left->key == 2, root->left->key);
-			printf("\ncroot %i, valor: %i", root->left->left->key == -1, root->left->left->key);
-				printf("\ndroot %i, valor: %i", root->left->left->left->key == -2, root->left->left->left->key);
-				printf("\neroot %i, valor: %i", root->left->left->right->key == 1, root->left->left->right->key);
-			printf("\nfroot %i, valor: %i", root->left->right->key == 14, root->left->right->key);
-		printf("\ngroot %i, valor: %i", root->right->key == 20, root->right->key);
-			printf("\nhroot %i, valor: %i", root->right->left->key == 16, root->right->left->key);
-			printf("\niroot %i, valor: %i", root->right->right->key == 22, root->right->right->key);
-				printf("\njroot %i, valor: %i", root->right->right->right->key == 23, root->right->right->right->key);
-				printf("\nkroot %i, valor: %i", root->right->right->left->key == 21, root->right->right->left->key);
+		
+		Node * _nodeToInsert2 = getNode();
+		_nodeToInsert2->key = 111;
+		_nodeToInsert2->value = 111;
+		
+		Node * _nodeToInsert3 = getNode();
+		_nodeToInsert3->key = 114;
+		_nodeToInsert3->value = 114;
+
+		
+		Node * _nodeToInsert4 = getNode();
+		_nodeToInsert4->key = 103;
+		_nodeToInsert4->value = 103;
+
+		
+		Node * _nodeToInsert5 = getNode();
+		_nodeToInsert5->key = 99; 
+		_nodeToInsert5->value = 99; 
+
+		printf("\nTESTE 2");
+
+	
+		root2 = insertOrUpdate(root2, NULL, _nodeToInsert, 0);
+		root2 = insertOrUpdate(root2, NULL, _nodeToInsert2, 0);
+		root2 = insertOrUpdate(root2, NULL, _nodeToInsert3, 0);
+		root2 = insertOrUpdate(root2, NULL, _nodeToInsert4, 0);
+		root2 = insertOrUpdate(root2, NULL, _nodeToInsert5, 0);
+		
+		
+		printf("\nroot %i, valor: %i", root2->key == 106, root2->key);
+			printf("\nroot %i, valor: %i", root2->right->key == 111, root2->right->key);
+				printf("\nroot %i, valor: %i", root2->right->right->key == 114, root2->right->right->key);
+			printf("\nroot %i, valor: %i", root2->left->key == 99, root2->left->key);
+				printf("\nroot %i, valor: %i", root2->left->left->key == 97, root2->left->left->key);
+				printf("\nroot %i, valor: %i", root2->left->right->key == 103, root2->left->right->key);
 	
 	}
-	
 		
-	printf("\n \n |||||||||||||||||||||");
-	
-	
 
 	if (DEBUG) {
 		Node * root2 = getNode();
@@ -482,19 +522,19 @@ int main( void ) {
 	}
 	
 	
-	Node * vector = (Node *) malloc(size * sizeof(Node));
-	
-	binaryTreeToArray(root, vector);
-
-	heapify(vector, v_size);
-	
-	Node * ptr = (Node *)malloc(sizeof(Node));
-	
-	
-	for (int i = 0; i < 4; i++) {	
-		getMax(vector, v_size, ptr);
-		printf("\n%c %i", ptr->key, ptr->value);
-	}
+//	Node * vector = (Node *) malloc(size * sizeof(Node));
+//	
+//	binaryTreeToArray(root, vector);
+//
+//	heapify(vector, v_size);
+//	
+//	Node * ptr = (Node *)malloc(sizeof(Node));
+//	
+//	
+//	for (int i = 0; i < 4; i++) {	
+//		getMax(vector, v_size, ptr);
+//		printf("\n%c %i", ptr->key, ptr->value);
+//	}
 
 	return 0;
 	
