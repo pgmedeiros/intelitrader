@@ -251,7 +251,7 @@ void downHeap(Node * vector, int size, int i) {
 
 void heapify(Node * vector, int m) {
 	for (int i = m/2; i>=0; i--) {
-		downHeap(vector, m - 1, i);
+		downHeap(vector, m, i);
 	}
 }
 
