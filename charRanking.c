@@ -4,8 +4,8 @@
 #define SON_RIGHT(i) (2 * i + 2)
 #define FATHER(i) ((i - 1) / 2)
 #define TESTA_HEAPFY 0
-#define TESTA_ARQUIVO_FINAL 0
-#define TESTA_ARVORE 1
+#define TESTA_ARQUIVO_FINAL 1
+#define TESTA_ARVORE 0
 #define RIGHT 1
 #define LEFT -1
 
@@ -180,11 +180,11 @@ Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction) {
 		root->bfactor = calculateBFactor(root);
 	}
 		
-	if (root->bfactor <= -2 && root->left->bfactor <= -1) { 
+	if (root->left != NULL && root->bfactor <= -2 && root->left->bfactor <= -1) { 
 		root = rotateRight(root, pai, direction);
 	}
 	
-	if (root->bfactor >= 2 && root->right->bfactor >= 1) { 
+	if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor >= 1) { 
 		root = rotateLeft(root, pai, direction);
 	} 
 		
@@ -522,19 +522,21 @@ int main( void ) {
 	}
 	
 	
-//	Node * vector = (Node *) malloc(size * sizeof(Node));
-//	
-//	binaryTreeToArray(root, vector);
-//
-//	heapify(vector, v_size);
-//	
-//	Node * ptr = (Node *)malloc(sizeof(Node));
-//	
-//	
-//	for (int i = 0; i < 4; i++) {	
-//		getMax(vector, v_size, ptr);
-//		printf("\n%c %i", ptr->key, ptr->value);
-//	}
+	Node * vector = (Node *) malloc(size * sizeof(Node));
+	
+	binaryTreeToArray(root, vector);
+
+	heapify(vector, v_size);
+	
+	int teste = v_size;
+	
+	Node * ptr = (Node *)malloc(sizeof(Node));
+	
+	
+	for (int i = 0; i < teste; i++) {	
+		getMax(vector, v_size, ptr);
+		printf("\n%c %i", ptr->key, ptr->value);
+	}
 
 	return 0;
 	
