@@ -3,7 +3,7 @@
 #define SON_LEFT(i) (2 * i + 1)
 #define SON_RIGHT(i) (2 * i + 2)
 #define FATHER(i) ((i - 1) / 2)
-#define TESTA_HEAPFY 1
+#define TESTA_HEAPFY 0
 
 typedef struct node Node;
 
@@ -405,11 +405,10 @@ int main( void ) {
 			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
 		
 	}
-	
-	Node * root;
-	
+		
 	if(TESTA_HEAPFY) {
 		
+		Node * root;
 		
 		root = getNode();
 		root->value = 20;
@@ -455,27 +454,44 @@ int main( void ) {
 		
 	}
 	
+	Node * root = NULL;
+
+	
+	FILE *toRead = fopen("toReadChar.txt", "r");
+
+	int c = fgetc(toRead);
+	
+	while (!feof(toRead)) {
+		
+		if (root == NULL) {
+			root = getNode();
+			root->key = c;
+			continue;
+		}
+		
+		Node * node = getNode();
+		node->key = c;
+		
+		root = insertOrUpdate(root, NULL, node, 0);
+		
+		c = fgetc(toRead);
+			
+	}
+	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
 	binaryTreeToArray(root, vector);
 	
-	for (int i = 0; i < v_size; i++) {
-		printf("%i ", vector[i].key);
-	}
-	
-	printf("\n");
-	
 	heapify(vector, v_size);
 	
-	for (int i = 0; i < v_size; i++) {
-		printf("%i ", vector[i].key);
+	Node * ptr = (Node *)malloc(sizeof(Node));
+	
+	
+	for (int i = 0; i < 4; i++) {	
+		getMax(vector, v_size, ptr);
+		printf("\n%c %i", ptr->key, ptr->value);
 	}
-	
-	Node * ptr;
-	
-	getMax(vector, v_size, ptr);
-	
-	printf("\n %i", ptr->value);
+
 	return 0;
 	
 
