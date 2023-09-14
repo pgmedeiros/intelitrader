@@ -1,6 +1,9 @@
 #include <stdio.h>
 #define DEBUG 0
-
+#define SON_LEFT(i) (2 * i + 1)
+#define SON_RIGHT(i) (2 * i + 2)
+#define FATHER(i) ((i - 1) / 2)
+#define TESTA_HEAPFY 1
 
 typedef struct node Node;
 
@@ -217,54 +220,91 @@ void binaryTreeToArray(Node * root, Node * vector) {
 }
 
 
+void downHeap(Node * vector, int size, int i) {
+	
+	Node aux;
+	
+	while ((vector[SON_RIGHT(i)].value > vector[i].value || vector[SON_LEFT(i)].value > vector[i].value)
+			&& (SON_RIGHT(i) <= size && SON_LEFT(i) <= size)) {
+				
+		if (vector[SON_RIGHT(i)].value > vector[i].value && vector[SON_RIGHT(i)].value >= vector[SON_LEFT(i)].value) {
+			aux = vector[i];
+			vector[i] = vector[SON_RIGHT(i)];
+			vector[SON_RIGHT(i)] = aux;
+			
+			i = SON_RIGHT(i);
+			
+		} else if (vector[SON_LEFT(i)].value > vector[i].value && vector[SON_LEFT(i)].value > vector[SON_RIGHT(i)].value) {
+			aux = vector[i];
+			vector[i] = vector[SON_LEFT(i)];
+			vector[SON_LEFT(i)] = aux;
+			i = SON_LEFT(i);
+		} 
+		
+	}
+		
+
+		
+	
+}
+
+void heapify(Node * vector, int m) {
+	for (int i = m/2; i>=0; i--) {
+		downHeap(vector, m, i);
+	}
+}
+
+
 int main( void ) {
 	
-	Node * root = getNode();
-	root->value = 1;
-	root->key = 20;	
 	
-	Node * nodeToInsert = getNode();
-	nodeToInsert->key = 15;
-	
-	Node * nodeToInsert2 = getNode();
-	nodeToInsert2->key = 21;
-	
-	Node * nodeToInsert3 = getNode();
-	nodeToInsert3->key = 14;
-	
-	Node * nodeToInsert4 = getNode();
-	nodeToInsert4->key = 16;
-	
-	Node * nodeToInsert5 = getNode();
-	nodeToInsert5->key = 2; 
-	
-	Node * nodeToInsert6 = getNode();
-	nodeToInsert6->key = 1;
-	
-	Node * nodeToInsert7 = getNode();
-	nodeToInsert7->key = -1;
-	
-	Node * nodeToInsert8 = getNode();
-	nodeToInsert8->key = -2;
-	
-	Node * nodeToInsert9 = getNode();
-	nodeToInsert9->key = 22;
-	
-	Node * nodeToInsert10 = getNode();
-	nodeToInsert10->key = 23;
-	
-	root = insertOrUpdate(root, NULL, nodeToInsert, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert2, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert3, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert4, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert5, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert7, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert8, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert9, 0);
-	root = insertOrUpdate(root, NULL, nodeToInsert10, 0);
 	
 	if(DEBUG) {
+		
+		Node * root = getNode();
+		root->value = 1;
+		root->key = 20;	
+		
+		Node * nodeToInsert = getNode();
+		nodeToInsert->key = 15;
+		
+		Node * nodeToInsert2 = getNode();
+		nodeToInsert2->key = 21;
+		
+		Node * nodeToInsert3 = getNode();
+		nodeToInsert3->key = 14;
+		
+		Node * nodeToInsert4 = getNode();
+		nodeToInsert4->key = 16;
+		
+		Node * nodeToInsert5 = getNode();
+		nodeToInsert5->key = 2; 
+		
+		Node * nodeToInsert6 = getNode();
+		nodeToInsert6->key = 1;
+		
+		Node * nodeToInsert7 = getNode();
+		nodeToInsert7->key = -1;
+		
+		Node * nodeToInsert8 = getNode();
+		nodeToInsert8->key = -2;
+		
+		Node * nodeToInsert9 = getNode();
+		nodeToInsert9->key = 22;
+		
+		Node * nodeToInsert10 = getNode();
+		nodeToInsert10->key = 23;
+		
+		root = insertOrUpdate(root, NULL, nodeToInsert, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert2, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert3, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert4, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert5, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert7, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert8, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert9, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert10, 0);
 		
 		printf("||||||||||||||||||||||||||||||");
 
@@ -356,11 +396,68 @@ int main( void ) {
 			printf("\nroot %i, valor: %i", root3->left->right->key == 65, root3->left->right->key);	
 		
 	}
+	
+	Node * root;
+	
+	if(TESTA_HEAPFY) {
+		
+		
+		root = getNode();
+		root->value = 20;
+		root->key = 20;	
+		
+		Node * nodeToInsert = getNode();
+		nodeToInsert->key = 15;
+		nodeToInsert->value = 15;
 
+		
+		Node * nodeToInsert2 = getNode();
+		nodeToInsert2->key = 21;
+		nodeToInsert2->value = 21;
+
+		
+		Node * nodeToInsert3 = getNode();
+		nodeToInsert3->key = 14;
+		nodeToInsert3->value = 14;
+
+		
+		Node * nodeToInsert4 = getNode();
+		nodeToInsert4->key = 16;
+		nodeToInsert4->value = 16;
+
+		
+		Node * nodeToInsert5 = getNode();
+		nodeToInsert5->key = 2; 
+		nodeToInsert5->value = 2;
+
+		
+		Node * nodeToInsert6 = getNode();
+		nodeToInsert6->key = 1;
+		nodeToInsert6->value = 1;
+
+
+		root = insertOrUpdate(root, NULL, nodeToInsert, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert2, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert3, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert4, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert5, 0);
+		root = insertOrUpdate(root, NULL, nodeToInsert6, 0);
+		
+		
+	}
+	
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
 	binaryTreeToArray(root, vector);
+	
+	for (int i = 0; i < size; i++) {
+		printf("%i ", vector[i].key);
+	}
+	
+	printf("\n");
+	
+	heapify(vector, 7);
 	
 	for (int i = 0; i < size; i++) {
 		printf("%i ", vector[i].key);
