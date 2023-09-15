@@ -4,6 +4,7 @@
 #define FATHER(i) ((i - 1) / 2)
 #define RIGHT 1
 #define LEFT -1
+#define DEBUG 1
 
 typedef struct node Node;
 
@@ -20,6 +21,7 @@ struct node {
 
 int size = 1;
 int v_size = 0;
+int counter = 0;
 
 Node * getNode() {
 	Node * node = (Node *) malloc(sizeof(Node));
@@ -61,15 +63,15 @@ Node * rotateLeft(Node * root, Node * pai, int direction) {
 	Node * rightLeft = NULL;
 	
 	aux = root; 
-	
+		
 	if (root->right->left != NULL) {
 		rightLeft = root->right->left;
 	}
-	
+		
 	root = root->right;
 	
 	aux->right = rightLeft;
-	
+		
 	root->left = aux;
 	
 	root->left->height = calculateHeight(root->left);
@@ -198,14 +200,13 @@ Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction) {
 	return root;
 }
 
-
 void binaryTreeToArray(Node * root, Node * vector) {
-
+		
 	if (root->left != NULL) {
 		binaryTreeToArray(root->left, vector);
 	}
 	
-	vector[v_size] = *root;	
+	vector[v_size] = *root;
 	v_size++;
 	
 	if (root->right != NULL) {
@@ -259,8 +260,8 @@ int main( void ) {
 
 	Node * root = NULL;
 	
-	Node * vector = (Node *) malloc(size * sizeof(Node));
-	
+	Node * ptr = (Node *) malloc(sizeof(Node));
+		
 	char toReadFile[100];
 	
 	char toWriteFile[100];
@@ -284,7 +285,7 @@ int main( void ) {
 
 	int c = fgetc(toRead);
 	
-	while (!feof(toRead)) {
+		while (!feof(toRead)) {
 		
 		if (root == NULL) {
 			root = getNode();
@@ -301,18 +302,18 @@ int main( void ) {
 		c = fgetc(toRead);
 		
 	}
-		
+	
+	Node * vector = (Node *) malloc(size * sizeof(Node));
+
 	binaryTreeToArray(root, vector);
 
 	heapify(vector, v_size);
 	
 	differentChar = v_size;
 	
-	Node * ptr = (Node *) malloc(sizeof(Node));
-	
 	for (int i = 0; i < differentChar; i++) {	
 		getMax(vector, v_size, ptr);
-		fprintf(toWrite,"%c %i\n", ptr->key, ptr->value);
+		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
 	}
 	
 	fclose(toWrite);
