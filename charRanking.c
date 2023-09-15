@@ -314,6 +314,9 @@ int main( void ) {
 		getMax(vector, v_size, ptr);
 		fprintf(toWrite,"%c %i\n", ptr->key, ptr->value);
 	}
+	
+	fclose(toWrite);
+	fclose(toRead);
 
 	return 0;
 	
