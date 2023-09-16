@@ -10,6 +10,7 @@
 #define SECOND_BLOCK 1
 #define THIRD_BLOCK 2 
 #define FOURTH_BLOCK 3
+#define VALUE_BEYOND_ASCII 999
 
 void encode(FILE * toWrite, char c[], int var);
 void decode(FILE * toWrite, char c[], int var);
@@ -56,10 +57,10 @@ int main() {
 	printf("Codificar ou Decodificar? Escolha 'c' ou 'd'\n");
 	scanf("%c", &option);
 	
-	printf("Caminho do arquivo fonte\n");
+	printf("Caminho do arquivo fonte:\n");
 	scanf("%s", &toReadPath);
 	
-	printf("Caminho do arquivo destino\n");
+	printf("Caminho do arquivo destino:\n");
 	scanf("%s", &toWritePath);
 	
 	
@@ -216,7 +217,7 @@ int getBitsFromSpecificPosition(int binary, int position, int wordSize, int mask
 
 void write(FILE * toWrite, unsigned * v, int size) {
 	for(int i = 0; i < size; i++) {
-		if (v[i] == NULL) {
+		if (v[i] == 0) {
 			continue;
 		}
 		fprintf(toWrite, "%c", v[i]);
