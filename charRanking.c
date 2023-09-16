@@ -8,6 +8,19 @@
 
 typedef struct node Node;
 
+Node * getNode();
+int calculateHeight(Node * node);
+int calculateBFactor(Node * root);
+Node * rotateLeft(Node * root, Node * pai, int direction);
+Node * rotateRight(Node * root, Node * pai, int direction);
+Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction);
+
+void binaryTreeToArray(Node * root, Node * vector);
+
+void downHeap(Node * vector, int size, int i);
+void heapify(Node * vector, int m);
+void getMax(Node * vector, int m, Node * ptrNode);
+
 struct node {
 	
 	Node * right;
@@ -22,6 +35,74 @@ struct node {
 int size = 1;
 int v_size = 0;
 int counter = 0;
+
+int main( void ) {
+
+	Node * root = NULL;
+	
+	Node * ptr = (Node *) malloc(sizeof(Node));
+		
+	char toReadFile[100];
+	
+	char toWriteFile[100];
+	
+	int differentChar;
+	
+	printf("Escreva o caminho do arquivo para ser lido: ");
+	scanf("%s", &toReadFile);
+	
+	printf("Escreva o caminho do arquivo para ser escrito: ");
+	scanf("%s", &toWriteFile);
+		
+	FILE *toRead = fopen(toReadFile, "r");
+	
+	FILE *toWrite = fopen(toWriteFile, "w");
+	
+	if (toRead == NULL || toWrite == NULL) {
+		printf("Erro ao abrir o(s) arquivo(s)");
+		exit(1);
+	}
+
+	int c = fgetc(toRead);
+	
+		while (!feof(toRead)) {
+		
+		if (root == NULL) {
+			root = getNode();
+			root->key = c;
+			c = fgetc(toRead);
+			continue;
+		}
+		
+		Node * node = getNode();
+		node->key = c;
+		
+		root = insertOrUpdate(root, NULL, node, 0);
+		
+		c = fgetc(toRead);
+		
+	}
+	
+	Node * vector = (Node *) malloc(size * sizeof(Node));
+
+	binaryTreeToArray(root, vector);
+
+	heapify(vector, v_size);
+	
+	differentChar = v_size;
+	
+	for (int i = 0; i < differentChar; i++) {	
+		getMax(vector, v_size, ptr);
+		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
+	}
+	
+	fclose(toWrite);
+	fclose(toRead);
+
+	return 0;
+	
+}
+
 
 Node * getNode() {
 	Node * node = (Node *) malloc(sizeof(Node));
@@ -257,72 +338,5 @@ void getMax(Node * vector, int m, Node * ptrNode) {
 	vector[0] = vector[m - 1];
 	downHeap(vector, m - 1, 0);
 	v_size--;
-	
-}
-
-int main( void ) {
-
-	Node * root = NULL;
-	
-	Node * ptr = (Node *) malloc(sizeof(Node));
-		
-	char toReadFile[100];
-	
-	char toWriteFile[100];
-	
-	int differentChar;
-	
-	printf("Escreva o caminho do arquivo para ser lido: ");
-	scanf("%s", &toReadFile);
-	
-	printf("Escreva o caminho do arquivo para ser escrito: ");
-	scanf("%s", &toWriteFile);
-		
-	FILE *toRead = fopen(toReadFile, "r");
-	
-	FILE *toWrite = fopen(toWriteFile, "w");
-	
-	if (toRead == NULL || toWrite == NULL) {
-		printf("Erro ao abrir o(s) arquivo(s)");
-		exit(1);
-	}
-
-	int c = fgetc(toRead);
-	
-		while (!feof(toRead)) {
-		
-		if (root == NULL) {
-			root = getNode();
-			root->key = c;
-			c = fgetc(toRead);
-			continue;
-		}
-		
-		Node * node = getNode();
-		node->key = c;
-		
-		root = insertOrUpdate(root, NULL, node, 0);
-		
-		c = fgetc(toRead);
-		
-	}
-	
-	Node * vector = (Node *) malloc(size * sizeof(Node));
-
-	binaryTreeToArray(root, vector);
-
-	heapify(vector, v_size);
-	
-	differentChar = v_size;
-	
-	for (int i = 0; i < differentChar; i++) {	
-		getMax(vector, v_size, ptr);
-		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
-	}
-	
-	fclose(toWrite);
-	fclose(toRead);
-
-	return 0;
 	
 }
