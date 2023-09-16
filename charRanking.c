@@ -1,10 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #define SON_LEFT(i) (2 * i + 1)
 #define SON_RIGHT(i) (2 * i + 2)
-#define FATHER(i) ((i - 1) / 2)
 #define RIGHT 1
 #define LEFT -1
-#define DEBUG 1
 
 typedef struct node Node;
 
@@ -28,7 +28,7 @@ Node * getNode() {
 	node->value = 1;
 	node->left = NULL;
 	node->right = NULL;
-	node->key = NULL;
+	node->key = -1;
 	node->bfactor = 0; 
 	node->height = 0;
 }
@@ -55,6 +55,19 @@ int calculateHeight(Node * node) {
 		}
  	}
 	
+}
+
+int calculateBFactor(Node * root) {
+	
+	if (root->right == NULL) {
+		root->bfactor = -(root->left->height + 1);
+	} else if (root->left == NULL) {
+		root->bfactor = root->right->height + 1;
+	} else {
+		root->bfactor = (root->right->height) - (root->left->height);
+	}
+	
+	return root->bfactor;
 }
 
 Node * rotateLeft(Node * root, Node * pai, int direction) {
@@ -127,20 +140,6 @@ Node * rotateRight(Node * root, Node * pai, int direction) {
 	return root;
 }
 
-int calculateBFactor(Node * root) {
-	
-	if (root->right == NULL) {
-		root->bfactor = -(root->left->height + 1);
-	} else if (root->left == NULL) {
-		root->bfactor = root->right->height + 1;
-	} else {
-		root->bfactor = (root->right->height) - (root->left->height);
-	}
-	
-	return root->bfactor;
-}
-
-
 Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction) {
 	
 	Node * retorno;
@@ -177,26 +176,31 @@ Node * insertOrUpdate (Node * root, Node * pai, Node * node, int direction) {
 		root->height = calculateHeight(root);
 		root->bfactor = calculateBFactor(root);
 	}
+	
+	if (root->left != NULL) {
 		
-	if (root->left != NULL && root->bfactor <= -2 && root->left->bfactor <= -1) { 
-		root = rotateRight(root, pai, direction);
+		if (root->bfactor <= -2 && root->left->bfactor <= -1) { 
+			root = rotateRight(root, pai, direction);
+		}
+		if (root->bfactor <= -2 && root->left->bfactor >= 1) {
+			rotateLeft(root->left, root, LEFT); 
+			root = rotateRight(root, pai, direction);
+		}
 	}
 	
-	if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor >= 1) { 
-		root = rotateLeft(root, pai, direction);
-	} 
+	if (root->right != NULL) {
 		
-	if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor <= -1) {
-		rotateRight(root->right, root, RIGHT); 
-		root = rotateLeft(root, pai, direction);
+		if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor >= 1) { 
+			root = rotateLeft(root, pai, direction);
+		} 
+		
+		if (root->right != NULL && root->bfactor >= 2 && root->right->bfactor <= -1) {
+			rotateRight(root->right, root, RIGHT); 
+			root = rotateLeft(root, pai, direction);
+		}	
+		
 	}
-	
-	if (root->left != NULL && root->bfactor <= -2 && root->left->bfactor >= 1) {
-		rotateLeft(root->left, root, LEFT); 
-		root = rotateRight(root, pai, direction);
-	}
-
-	
+		
 	return root;
 }
 
