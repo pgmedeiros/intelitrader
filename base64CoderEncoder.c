@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define BYTE_SIZE 8
 #define BASE64_BLOCK_SIZE 24
