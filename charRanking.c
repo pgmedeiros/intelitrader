@@ -50,9 +50,32 @@ void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** to
 	
 	*toWrite = fopen(toWriteFile, "w");
 	
-	if (toRead == NULL || toWrite == NULL) {
+	if (*toRead == NULL || *toWrite == NULL) {
 		printf("Erro ao abrir o(s) arquivo(s)");
 		exit(1);
+	}
+}
+
+void read(FILE * toRead, Node ** root) {
+	
+	int c = fgetc(toRead);
+	
+	while (!feof(toRead)) {
+		
+		if (*root == NULL) {
+			*root = getNode();
+			(*root)->key = c;
+			c = fgetc(toRead);
+			continue;
+		}
+		
+		Node * node = getNode();
+		node->key = c;
+		
+		*root = insertOrUpdate(*root, NULL, node, 0);
+		
+		c = fgetc(toRead);
+		
 	}
 }
 
@@ -75,25 +98,7 @@ int main( void ) {
 		
 	openFiles(toReadFile, toWriteFile, &toRead, &toWrite);
 
-	int c = fgetc(toRead);
-	
-		while (!feof(toRead)) {
-		
-		if (root == NULL) {
-			root = getNode();
-			root->key = c;
-			c = fgetc(toRead);
-			continue;
-		}
-		
-		Node * node = getNode();
-		node->key = c;
-		
-		root = insertOrUpdate(root, NULL, node, 0);
-		
-		c = fgetc(toRead);
-		
-	}
+	read(toRead, &root);
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 
