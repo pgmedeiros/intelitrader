@@ -79,12 +79,22 @@ void read(FILE * toRead, Node ** root) {
 	}
 }
 
+void write(Node * elements, FILE * toWrite) {
+	
+	Node * ptr = (Node *) malloc(sizeof(Node));
+	int differentChar = v_size;
+	
+	for (int i = 0; i < differentChar; i++) {	
+		getMax(elements, v_size, ptr);
+		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
+	}
+	
+}
+
 int main( void ) {
 
 	Node * root = NULL;
-	
-	Node * ptr = (Node *) malloc(sizeof(Node));
-		
+			
 	char toReadFile[100];
 	
 	char toWriteFile[100];
@@ -105,13 +115,8 @@ int main( void ) {
 	binaryTreeToArray(root, vector);
 
 	heapify(vector, v_size);
-	
-	differentChar = v_size;
-	
-	for (int i = 0; i < differentChar; i++) {	
-		getMax(vector, v_size, ptr);
-		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
-	}
+
+	write(vector, toWrite);
 	
 	fclose(toWrite);
 	fclose(toRead);
