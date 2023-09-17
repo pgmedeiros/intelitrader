@@ -25,6 +25,12 @@ void base64IndexToValue(int * array);
 void write(FILE * toWrite, unsigned * v, int size);
 void convertArrayToBase64Index(int * v);
 int  base64ValueToIndex(int number);
+void getFilesPath(char * toReadPath, char * toWritePath);
+void openFiles(char * toReadPath, char * toWritePath, FILE ** toRead, FILE ** toWrite);
+int defineWordSize(char c);
+void readAndWrite(FILE * toWrite, FILE * toRead, char * readed, char option);
+void getOption(char * option);
+void fillArray(int var, int * array, char * c, int size);
 
 int base64Table[65]= {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 					  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
@@ -46,106 +52,44 @@ int main() {
 	
 	FILE *toRead;
 	FILE *toWrite;
-	char readed[10000];
-	int counter = 0;
 	
+	char readed[10000];	
 	char toWritePath[60];
 	char toReadPath[60];
-	
 	char option;
 	
-	printf("Codificar ou Decodificar? Escolha 'c' ou 'd'\n");
-	scanf("%c", &option);
+	getOption(&option);
 	
-	printf("Caminho do arquivo fonte:\n");
-	scanf("%s", &toReadPath);
+	getFilesPath(toReadPath, toWritePath);
 	
-	printf("Caminho do arquivo destino:\n");
-	scanf("%s", &toWritePath);
+	openFiles(toReadPath, toWritePath, &toRead, &toWrite);
 	
+	readAndWrite(toWrite, toRead, readed, option);
 	
-	toRead = fopen(toReadPath, "r");
-	toWrite = fopen(toWritePath, "w");
+	fclose(toWrite);
+	fclose(toRead);
 	
-	
-	if (toRead == NULL || toWrite == NULL) {
-		printf("Erro ao tentar ler um dos arquivos");
-		exit(1);
-	}
-	
-	if (option == 'c') {
-		char readedChar;
-	
-		readed[0] = fgetc(toRead);
-		counter = 1;
-		char teste;
-		
-		int var = 0;
-		
-		while(!feof(toRead)) {
-			
-			for(int i = 0; i < 3; i ++) {
-				
-				teste = fgetc(toRead);
-				
-				if (teste != EOF) {
-					readed[counter] = teste;
-				}
-				counter++;	
-				
-			}
-			
-			encode(toWrite, readed, var);
-			
-			var++;			
-		}
-	} else {
-		
-		char readedChar;
-	
-		readed[0] = fgetc(toRead);
-		counter = 1;
-		char teste;
-		
-		int var = 0;
-		
-		while(!feof(toRead)) {
-			
-			for(int i = 0; i < 4; i ++) {
-				
-				teste = fgetc(toRead);
-				
-				if (teste != EOF) {
-					readed[counter] = teste;
-				}
-				counter++;	
-				
-			}
-			
-			decode(toWrite, readed, var);
-			
-			var++;			
-		
-		}
-	}
-		
 	return 0;
 }
 
-void encode(FILE * toWrite, char c[], int var) {
+void fillArray(int var, int * array, char * c, int size) {
+	int y;
+	for(int i = 0; i < size; i++) {
+		y = i + (var  * size);
+		array[i] = c[y];
+	}
+}
+
+void encode(FILE * toWrite, char * c, int var) {
 	
 	int base64CharArray[4] = { base64Table[64] };
 	int asciiCharArraySize = 3;
 	int binary = 0; 
 	int array[3];
-	int y;
 	
-	for(int i = 0; i < 3; i++) {
-		y = i + (var  * 3);
-		array[i] = c[y];
-	}
+	fillArray(var, array, c, BASE64_BYTES_NUMBER);
 	
-	createSingleBinary(array, BYTE_SIZE, &binary, 3);
+	createSingleBinary(array, BYTE_SIZE, &binary, BASE64_BYTES_NUMBER);
 	
 	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
@@ -155,19 +99,14 @@ void encode(FILE * toWrite, char c[], int var) {
 
 }
 
-void decode(FILE * toWrite, char c[], int var) {
+void decode(FILE * toWrite, char * c, int var) {
 	
 	int arrayAscii[3];
 	unsigned binary = 0;
-	int bitsToMove;
-	
+	int bitsToMove;	
 	int array[4];
-	int y;
-	
-	for(int i = 0; i < 4; i++) {
-		y = i + (var * 4);
-		array[i] = c[y];
-	}
+		
+	fillArray(var, array, c, 4);
 	
 	convertArrayToBase64Index(array);
 
@@ -242,7 +181,6 @@ void defineBitsToMove(int * bitsToMove, int position, int wordSize) {
 	}
 }
 
-
 void convertArrayToBase64Index(int * v) {
 	for (int i = 0; i < 4; i++) {
 		v[i] = base64ValueToIndex(v[i]);
@@ -290,4 +228,78 @@ void base64IndexToValue(int * array) {
 	}
 }
 
+void getFilesPath(char * toReadPath, char * toWritePath) {
+	
+	printf("Caminho do arquivo fonte:\n");
+	scanf("%s", toReadPath);
+	
+	printf("Caminho do arquivo destino:\n");
+	scanf("%s", toWritePath);
+}
 
+void openFiles(char * toReadPath, char * toWritePath, FILE ** toRead, FILE ** toWrite) {
+	
+	*toRead = fopen(toReadPath, "r");
+	*toWrite = fopen(toWritePath, "w");
+	
+	
+	if (*toRead == NULL || *toWrite == NULL) {
+		printf("Erro ao tentar ler um dos arquivos");
+		exit(1);
+	}
+}
+
+int defineWordSize(char c) {
+	if (c == 'c') {
+		return 3;
+	} else {
+		return 4;
+	}
+}
+
+void readAndWrite(FILE * toWrite, FILE * toRead, char * readed, char option) {
+	
+	char readedChar;
+	
+	readed[0] = fgetc(toRead);
+	int counter = 1;
+	char test;
+	
+	int var = 0;
+	
+	int wordSize = defineWordSize(option);
+	
+	while(!feof(toRead)) {
+		
+		for(int i = 0; i < wordSize; i ++) {
+			
+			test = fgetc(toRead);
+			
+			if (test != EOF) {
+				readed[counter] = test;
+			}
+			counter++;	
+			
+		}
+		
+		if (option == 'c') {
+			encode(toWrite, readed, var);
+		} else {
+			decode(toWrite, readed, var);
+		}
+		
+		
+		var++;			
+	}
+	
+}
+
+void getOption(char * option) {
+	printf("Codificar ou Decodificar? Escolha 'c' ou 'd'\n");
+	scanf("%c", option);
+	
+	if (!(*option == 'c' || *option == 'd')) {
+		printf("opcao escolhida nao pode ser aceita.");
+		exit(1);
+	}
+}
