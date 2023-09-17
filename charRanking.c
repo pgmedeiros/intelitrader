@@ -34,7 +34,6 @@ struct node {
 
 int size = 1;
 int v_size = 0;
-int counter = 0;
 
 void getFilesPath(char * toReadFile, char * toWriteFile) {
 	printf("Escreva o caminho do arquivo para ser lido: ");
@@ -94,16 +93,11 @@ void write(Node * elements, FILE * toWrite) {
 int main( void ) {
 
 	Node * root = NULL;
-			
 	char toReadFile[100];
-	
 	char toWriteFile[100];
-	
 	FILE * toRead;
 	FILE * toWrite;
-	
-	int differentChar;
-	
+		
 	getFilesPath(toReadFile, toWriteFile);
 		
 	openFiles(toReadFile, toWriteFile, &toRead, &toWrite);
@@ -111,7 +105,7 @@ int main( void ) {
 	read(toRead, &root);
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
-
+	
 	binaryTreeToArray(root, vector);
 
 	heapify(vector, v_size);
