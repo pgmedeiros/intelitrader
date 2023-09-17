@@ -23,7 +23,7 @@ void getMax(Node * vector, int m, Node * ptrNode);
 
 void getFilesPath(char * toReadFile, char * toWriteFile);
 void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** toWrite);
-void read(FILE * toRead, Node ** root);
+void readAndBuildTree(FILE * toRead, Node ** root);
 void write(Node * elements, FILE * toWrite);
 
 struct node {
@@ -52,7 +52,7 @@ int main( void ) {
 		
 	openFiles(toReadFile, toWriteFile, &toRead, &toWrite);
 
-	read(toRead, &root);
+	readAndBuildTree(toRead, &root);
 	
 	Node * vector = (Node *) malloc(size * sizeof(Node));
 	
@@ -327,7 +327,7 @@ void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** to
 	}
 }
 
-void read(FILE * toRead, Node ** root) {
+void readAndBuildTree(FILE * toRead, Node ** root) {
 	
 	int c = fgetc(toRead);
 	
