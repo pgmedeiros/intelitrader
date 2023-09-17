@@ -44,6 +44,18 @@ void getFilesPath(char * toReadFile, char * toWriteFile) {
 	scanf("%s", toWriteFile);
 }
 
+void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** toWrite) {
+	
+	*toRead = fopen(toReadFile, "r");
+	
+	*toWrite = fopen(toWriteFile, "w");
+	
+	if (toRead == NULL || toWrite == NULL) {
+		printf("Erro ao abrir o(s) arquivo(s)");
+		exit(1);
+	}
+}
+
 int main( void ) {
 
 	Node * root = NULL;
@@ -54,18 +66,14 @@ int main( void ) {
 	
 	char toWriteFile[100];
 	
+	FILE * toRead;
+	FILE * toWrite;
+	
 	int differentChar;
 	
 	getFilesPath(toReadFile, toWriteFile);
 		
-	FILE *toRead = fopen(toReadFile, "r");
-	
-	FILE *toWrite = fopen(toWriteFile, "w");
-	
-	if (toRead == NULL || toWrite == NULL) {
-		printf("Erro ao abrir o(s) arquivo(s)");
-		exit(1);
-	}
+	openFiles(toReadFile, toWriteFile, &toRead, &toWrite);
 
 	int c = fgetc(toRead);
 	
