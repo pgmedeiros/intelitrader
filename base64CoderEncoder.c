@@ -45,6 +45,7 @@ int const COMPLETE_ASCII = 255;
 int const MASK_INT_POSITIVE = 4294967295;
 int const MASK_EMPTY = 0;
 int const ASCII_ARRAY_SIZE = 3;
+int const BASE64_ARRAY_SIZE = 4;
 int const BASE64_EMPTY_VALUE = 61;
 
 int main() {
@@ -83,38 +84,37 @@ void fillArray(int var, int * array, char * c, int size) {
 void encode(FILE * toWrite, char * c, int var) {
 	
 	int base64CharArray[4] = { base64Table[64] };
-	int asciiCharArraySize = 3;
 	int binary = 0; 
-	int array[3];
+	int array[ASCII_ARRAY_SIZE];
 	
 	fillArray(var, array, c, BASE64_BYTES_NUMBER);
 	
 	createSingleBinary(array, BYTE_SIZE, &binary, BASE64_BYTES_NUMBER);
 	
-	separateBitsToSomeSize(base64CharArray, binary, asciiCharArraySize, BASE64_WORD_SIZE, COMPLETE_BASE64);
+	separateBitsToSomeSize(base64CharArray, binary, ASCII_ARRAY_SIZE, BASE64_WORD_SIZE, COMPLETE_BASE64);
 	
 	base64IndexToValue(base64CharArray);
 	
-	write(toWrite, base64CharArray, 4);	
+	write(toWrite, base64CharArray, BASE64_ARRAY_SIZE);	
 
 }
 
 void decode(FILE * toWrite, char * c, int var) {
 	
-	int arrayAscii[3];
+	int arrayAscii[ASCII_ARRAY_SIZE];
 	unsigned binary = 0;
 	int bitsToMove;	
-	int array[4];
+	int array[BASE64_ARRAY_SIZE];
 		
-	fillArray(var, array, c, 4);
+	fillArray(var, array, c, BASE64_ARRAY_SIZE);
 	
 	convertArrayToBase64Index(array);
 
-	createSingleBinary(array, BASE64_WORD_SIZE, &binary, 4);	
+	createSingleBinary(array, BASE64_WORD_SIZE, &binary, BASE64_ARRAY_SIZE);	
 	
 	separateBitsToSomeSize(arrayAscii, binary, ASCII_ARRAY_SIZE, BYTE_SIZE, COMPLETE_ASCII);
 
-	write(toWrite, arrayAscii, 3);
+	write(toWrite, arrayAscii, BASE64_ARRAY_SIZE);
 
 }
 
