@@ -21,6 +21,11 @@ void downHeap(Node * vector, int size, int i);
 void heapify(Node * vector, int m);
 void getMax(Node * vector, int m, Node * ptrNode);
 
+void getFilesPath(char * toReadFile, char * toWriteFile);
+void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** toWrite);
+void read(FILE * toRead, Node ** root);
+void write(Node * elements, FILE * toWrite);
+
 struct node {
 	
 	Node * right;
@@ -34,61 +39,6 @@ struct node {
 
 int size = 1;
 int v_size = 0;
-
-void getFilesPath(char * toReadFile, char * toWriteFile) {
-	printf("Escreva o caminho do arquivo para ser lido: ");
-	scanf("%s", toReadFile);
-	
-	printf("Escreva o caminho do arquivo para ser escrito: ");
-	scanf("%s", toWriteFile);
-}
-
-void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** toWrite) {
-	
-	*toRead = fopen(toReadFile, "r");
-	
-	*toWrite = fopen(toWriteFile, "w");
-	
-	if (*toRead == NULL || *toWrite == NULL) {
-		printf("Erro ao abrir o(s) arquivo(s)");
-		exit(1);
-	}
-}
-
-void read(FILE * toRead, Node ** root) {
-	
-	int c = fgetc(toRead);
-	
-	while (!feof(toRead)) {
-		
-		if (*root == NULL) {
-			*root = getNode();
-			(*root)->key = c;
-			c = fgetc(toRead);
-			continue;
-		}
-		
-		Node * node = getNode();
-		node->key = c;
-		
-		*root = insertOrUpdate(*root, NULL, node, 0);
-		
-		c = fgetc(toRead);
-		
-	}
-}
-
-void write(Node * elements, FILE * toWrite) {
-	
-	Node * ptr = (Node *) malloc(sizeof(Node));
-	int differentChar = v_size;
-	
-	for (int i = 0; i < differentChar; i++) {	
-		getMax(elements, v_size, ptr);
-		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
-	}
-	
-}
 
 int main( void ) {
 
@@ -356,3 +306,64 @@ void getMax(Node * vector, int m, Node * ptrNode) {
 	v_size--;
 	
 }
+
+void getFilesPath(char * toReadFile, char * toWriteFile) {
+	printf("Escreva o caminho do arquivo para ser lido: ");
+	scanf("%s", toReadFile);
+	
+	printf("Escreva o caminho do arquivo para ser escrito: ");
+	scanf("%s", toWriteFile);
+}
+
+void openFiles(char * toReadFile, char * toWriteFile, FILE ** toRead, FILE ** toWrite) {
+	
+	*toRead = fopen(toReadFile, "r");
+	
+	*toWrite = fopen(toWriteFile, "w");
+	
+	if (*toRead == NULL || *toWrite == NULL) {
+		printf("Erro ao abrir o(s) arquivo(s)");
+		exit(1);
+	}
+}
+
+void read(FILE * toRead, Node ** root) {
+	
+	int c = fgetc(toRead);
+	
+	if (c == -1) {
+		printf("Nao foi possível ler o arquivo.");
+		exit(1);
+	}
+	
+	while (!feof(toRead)) {
+		
+		if (*root == NULL) {
+			*root = getNode();
+			(*root)->key = c;
+			c = fgetc(toRead);
+			continue;
+		}
+		
+		Node * node = getNode();
+		node->key = c;
+		
+		*root = insertOrUpdate(*root, NULL, node, 0);
+		
+		c = fgetc(toRead);
+		
+	}
+}
+
+void write(Node * elements, FILE * toWrite) {
+	
+	Node * ptr = (Node *) malloc(sizeof(Node));
+	int differentChar = v_size;
+	
+	for (int i = 0; i < differentChar; i++) {	
+		getMax(elements, v_size, ptr);
+		fprintf(toWrite,"caractere: %c repeticoes: %i\n", ptr->key, ptr->value);
+	}
+	
+}
+
