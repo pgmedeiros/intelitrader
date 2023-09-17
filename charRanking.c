@@ -36,6 +36,14 @@ int size = 1;
 int v_size = 0;
 int counter = 0;
 
+void getFilesPath(char * toReadFile, char * toWriteFile) {
+	printf("Escreva o caminho do arquivo para ser lido: ");
+	scanf("%s", toReadFile);
+	
+	printf("Escreva o caminho do arquivo para ser escrito: ");
+	scanf("%s", toWriteFile);
+}
+
 int main( void ) {
 
 	Node * root = NULL;
@@ -48,11 +56,7 @@ int main( void ) {
 	
 	int differentChar;
 	
-	printf("Escreva o caminho do arquivo para ser lido: ");
-	scanf("%s", &toReadFile);
-	
-	printf("Escreva o caminho do arquivo para ser escrito: ");
-	scanf("%s", &toWriteFile);
+	getFilesPath(toReadFile, toWriteFile);
 		
 	FILE *toRead = fopen(toReadFile, "r");
 	
