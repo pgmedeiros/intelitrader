@@ -20,5 +20,5 @@ Após isso, é criado uma estrutura de Heap Máximo nesse array, utilizando o al
 
 Dessa forma, o algoritmo criado é capaz de resolver o problema, no pior caso, com complexidade O(n log n). 
 
-Uma outra alternativa de projeto seria a criação de uma Hash Table, onde os indíces seriam utilizados como o valor do caractere na tabela, assim, tendo tempo de busca e atualização de valores O(1). Porém, essa solução limitaria o algoritmo a tabelas de caracteres pequenas em prol da performance. Pois, ela precisa criar um array do tamanho do número de caracteres que podem aparecer no arquivo de texto, caso fosse necessário lidar com a tabela Unicode, isso iria necessitar de um grande espaço de memória que poderia ser subutilizado. 
+Uma outra alternativa de projeto seria a criação de uma Hash Table, onde os indíces seriam utilizados como o valor do caractere na tabela, assim, tendo tempo de busca e atualização de valores O(1). Porém, essa solução limitaria o algoritmo a tabelas de caracteres pequenas em prol do baixo consumo de memória. Pois, ela precisa criar um array do tamanho do número de caracteres que podem aparecer no arquivo de texto, caso fosse necessário lidar com a tabela Unicode, isso iria necessitar de um grande espaço de memória que poderia ser subutilizado. 
 
